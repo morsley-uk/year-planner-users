@@ -10,7 +10,11 @@ Key Technologies:
 * CQRS with MediatR
 * AutoMapper
 * REST
+* Swagger and API versioning
+* Serilog and Seq
+* gRPC
 * HATEOAS
 * Docker
 * Kubernetes
 * Istio
+* Azure
