@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Morsley.UK.YearPlanner.Users.API</name>
+    </assembly>
+    <members>
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(Morsley.UK.YearPlanner.Users.API.Models.GetUsersRequest)">
+            <summary>
+            Get a page of users
+            </summary>
+            <param name="request">
+            A GetUsersRequest object which contains fields for paging, searching, filtering, sorting and shaping user data</param>
+            <returns>A page of users</returns>
+            <response code="200">Success - OK - Returns the requested page of users</response>
+            <response code="204">Success - No Content - No users matched given criteria</response>
+            <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
+        </member>
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(System.Guid)">
+            <summary>
+            Get a user
+            </summary>
+            <param name="id">The unique identifier of the user</param>
+            <returns>The requested user</returns>
+            <response code="200">Success - OK - Returns the requested user</response>
+            <response code="204">Success - No Content - No user matched the given identifier</response>
+            <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
+        </member>
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Add(Morsley.UK.YearPlanner.Users.API.Models.CreateUserRequest)">
+            <summary>
+            Add a user
+            </summary>
+            <param name="request">A CreateUserRequest object which contains all the necessary data to create a user</param>
+            <returns>A URI to the newly created user in the header (location)</returns>
+            <response code="201">Success - Created - The user was successfully created</response>
+            <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response> 
+        </member>
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.UpdateUserRequest)">
+            <summary>
+            Fully update a user
+            </summary>
+            <param name="id">The unique identifier of the user</param>
+            <param name="request">An UpdateUserRequest object which contains all the updates</param>
+            <returns>The updated user</returns>
+            <response code="200">Success - OK - The user was successfully updated</response>
+            <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
+            <response code="404">Error - Not Found - No user matched the given identifier</response>
+        </member>
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Morsley.UK.YearPlanner.Users.API.Models.UpdateUserRequest})">
+            <summary>
+            Fully or partially update a user
+            </summary>
+            <param name="id">The unique identifier of the user</param>
+            <param name="patchDocument">
+            A JSON Patch Document detailing the full or partial updates to the user
+            </param>
+            <returns>The updated user</returns>
+            <response code="200">Success - OK - The user was successfully updated</response>
+            <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
+            <response code="404">Error - Not Found - No user matched the given identifier</response>
+            <response code="422">Error - Unprocessable Entity - Unable to process the contained instructions.</response>
+            <remarks>
+            Sample request (this request updates the user's first name): \
+            PATCH /users/id \
+            [ \
+                { \
+                    "op": "replace", \
+                    "path": "/firstname", \
+                    "value": "Dave" \
+                } \
+            ] \
+            </remarks>
+        </member>
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Delete(System.Guid)">
+            <summary>
+            Delete a user
+            </summary>
+            <param name="id">The unique identifier of the user</param>
+            <returns>Nothing</returns>
+            <response code="204">Success - No Content - User was successfully deleted</response>
+            <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
+            <response code="404">Error - Not Found - No user matched the given identifier</response>
+        </member>
+    </members>
+</doc>
