@@ -1,23 +1,30 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Morsley.UK.YearPlanner.Users.API.Swagger
 {
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {
         private readonly IApiVersionDescriptionProvider _provider;
+        private readonly OpenApiInfo _openApiInfo;
 
-        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => _provider = provider;
+        public ConfigureSwaggerOptions(
+            IApiVersionDescriptionProvider provider,
+            IOptions<OpenApiInfo> options)
+        {
+            _provider = provider;
+            _openApiInfo = options.Value;
+        }
 
         public void Configure(SwaggerGenOptions options)
         {
-            foreach (var description in _provider.ApiVersionDescriptions)
+            foreach (ApiVersionDescription description in _provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
                 var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -26,20 +33,25 @@ namespace Morsley.UK.YearPlanner.Users.API.Swagger
             }
         }
 
-        static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
             var info = new OpenApiInfo
             {
-                Title = "Morsley UK - Year Planner - Users API",
+                Title = string.Format(_openApiInfo.Title, description.ApiVersion.ToString()),
                 Version = description.ApiVersion.ToString(),
-                Description = "The Users API for Year Planner.",
+                Description = _openApiInfo.Description,
                 Contact = new OpenApiContact
                 {
-                    Name = "John Morsley",
-                    Email = "john@morsley.uk"
+                    Name = _openApiInfo.Contact.Name,
+                    Email = _openApiInfo.Contact.Email,
+                    Url = _openApiInfo.Contact.Url
                 },
-                TermsOfService = new Uri("https://morsley.uk/terms-of-service"),
-                License = new OpenApiLicense { Name = "Meh", Url = new Uri("https://morsley.uk/license") }
+                TermsOfService = _openApiInfo.TermsOfService,
+                License = new OpenApiLicense
+                {
+                    Name = _openApiInfo.License.Name,
+                    Url = _openApiInfo.License.Url
+                }
             };
 
             if (description.IsDeprecated)

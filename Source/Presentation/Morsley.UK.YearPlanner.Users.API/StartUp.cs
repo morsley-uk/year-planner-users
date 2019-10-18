@@ -6,28 +6,55 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Morsley.UK.YearPlanner.Users.API.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using SwaggerOptions = Swashbuckle.AspNetCore.Swagger.SwaggerOptions;
 
 namespace Morsley.UK.YearPlanner.Users.API
 {
     public class StartUp
     {
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
         public StartUp(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         // Dependency Injection...
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            services.Configure<OpenApiInfo>(_configuration.GetSection(nameof(OpenApiInfo)));
+
+            //var openApiInfo = services.GetType();
+
+            //services.AddSingleton<IC>()
 
             AddApiVersioning(services);
         }
+
+        //private static void AddApiExplorerOptions(ApiExplorerOptions options)
+        //{
+        //    options.SubstituteApiVersionInUrl = true;
+        //}
+
+        //private static void AddApiVersioningOptions(ApiVersioningOptions options)
+        //{
+        //    options.ReportApiVersions = true;
+        //    options.ApiVersionReader = new HeaderApiVersionReader("api-version");
+        //}
+
+        //private static void SwaggerGen(SwaggerGenOptions options)
+        //{
+        //    //options.SchemaFilter<AddFluedValidationRulesToSwagger>();
+        //    options.DescribeAllEnumsAsStrings();
+        //    foreach (var file in Directory.GetFiles(PlatformServices.Default.Application.ApplicationBasePath, "*.xml"))
+        //    {
+        //        options.IncludeXmlComments(file);
+        //    }
+        //}
 
         // Pipeline...
         public void Configure(
@@ -58,8 +85,13 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         private void AddApiVersioning(IServiceCollection services)
         {
-            var swaggerOptions = new SwaggerOptions();
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            var swaggerOptions = new API.Swagger.SwaggerOptions();
+            _configuration.GetSection(nameof(API.Swagger.SwaggerOptions)).Bind(swaggerOptions);
+
+            var openApiInfo = new OpenApiInfo();
+            _configuration.GetSection(nameof(OpenApiInfo)).Bind(openApiInfo);
+
+            //services.Configure<OpenApiInfo>(Configuration.GetSection(nameof(OpenApiInfo)));
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
@@ -92,8 +124,8 @@ namespace Morsley.UK.YearPlanner.Users.API
             IWebHostEnvironment hostingEnvironment,
             IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
-            var swaggerOptions = new SwaggerOptions();
-            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            var swaggerOptions = new API.Swagger.SwaggerOptions();
+            _configuration.GetSection(nameof(API.Swagger.SwaggerOptions)).Bind(swaggerOptions);
 
             applicationBuilder.UseSwagger();
 
@@ -108,7 +140,6 @@ namespace Morsley.UK.YearPlanner.Users.API
                 options.RoutePrefix = "";
             });
         }
-
 
         #endregion Private Methods
     }
