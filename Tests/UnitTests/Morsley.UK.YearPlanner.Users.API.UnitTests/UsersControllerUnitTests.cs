@@ -1,9 +1,9 @@
-using System;
 using FluentAssertions;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Morsley.UK.YearPlanner.Users.API.Controllers;
+using Morsley.UK.YearPlanner.Users.API.Controllers.v1;
 using Morsley.UK.YearPlanner.Users.API.Models;
+using System;
 using Xunit;
 
 namespace Morsley.UK.YearPlanner.Users.API.UnitTests
@@ -15,9 +15,10 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
         {
             // Arrange...
             var sut = new UsersController();
+            const GetUsersRequest request = null;
 
             // Act...
-            var result = sut.Get(null);
+            var result = sut.Get(request);
 
             // Assert...
             result.Should().NotBeNull();
@@ -74,9 +75,10 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
         {
             // Arrange...
             var sut = new UsersController();
+            const CreateUserRequest request = null;
 
             // Act...
-            var result = sut.Add(null);
+            var result = sut.Add(request);
 
             // Assert...
             result.Should().NotBeNull();
@@ -119,7 +121,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             // Arrange...
             var sut = new UsersController();
             var userId = Guid.NewGuid();
-            API.Models.UpdateUserRequest request = null;
+            const API.Models.UpdateUserRequest request = null;
 
             // Act...
             var result = sut.Update(userId, request);
@@ -135,7 +137,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             // Arrange...
             var sut = new UsersController();
             var userId = Guid.NewGuid();
-            JsonPatchDocument<UpdateUserRequest> patchDocument = null;
+            const JsonPatchDocument<UpdateUserRequest> patchDocument = null;
 
             // Act...
             var result = sut.Update(userId, patchDocument);
