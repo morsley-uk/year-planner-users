@@ -26,35 +26,8 @@ namespace Morsley.UK.YearPlanner.Users.API
         {
             services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            services.Configure<OpenApiInfo>(_configuration.GetSection(nameof(OpenApiInfo)));
-
-            //var openApiInfo = services.GetType();
-
-            //services.AddSingleton<IC>()
-
             AddApiVersioning(services);
         }
-
-        //private static void AddApiExplorerOptions(ApiExplorerOptions options)
-        //{
-        //    options.SubstituteApiVersionInUrl = true;
-        //}
-
-        //private static void AddApiVersioningOptions(ApiVersioningOptions options)
-        //{
-        //    options.ReportApiVersions = true;
-        //    options.ApiVersionReader = new HeaderApiVersionReader("api-version");
-        //}
-
-        //private static void SwaggerGen(SwaggerGenOptions options)
-        //{
-        //    //options.SchemaFilter<AddFluedValidationRulesToSwagger>();
-        //    options.DescribeAllEnumsAsStrings();
-        //    foreach (var file in Directory.GetFiles(PlatformServices.Default.Application.ApplicationBasePath, "*.xml"))
-        //    {
-        //        options.IncludeXmlComments(file);
-        //    }
-        //}
 
         // Pipeline...
         public void Configure(
@@ -78,20 +51,17 @@ namespace Morsley.UK.YearPlanner.Users.API
                 endpoints.MapControllers();
             });
 
-            ConfigureApiVersioning(applicationBuilder, hostingEnvironment, apiVersionDescriptionProvider);
+            ConfigureApiVersioning(applicationBuilder, apiVersionDescriptionProvider);
         }
 
         #region Private Methods
 
         private void AddApiVersioning(IServiceCollection services)
         {
-            var swaggerOptions = new API.Swagger.SwaggerOptions();
-            _configuration.GetSection(nameof(API.Swagger.SwaggerOptions)).Bind(swaggerOptions);
+            //services.Configure<OpenApiInfo>(_configuration.GetSection(nameof(OpenApiInfo)));
 
             var openApiInfo = new OpenApiInfo();
             _configuration.GetSection(nameof(OpenApiInfo)).Bind(openApiInfo);
-
-            //services.Configure<OpenApiInfo>(Configuration.GetSection(nameof(OpenApiInfo)));
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
@@ -121,12 +91,8 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         private void ConfigureApiVersioning(
             IApplicationBuilder applicationBuilder,
-            IWebHostEnvironment hostingEnvironment,
             IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
-            var swaggerOptions = new API.Swagger.SwaggerOptions();
-            _configuration.GetSection(nameof(API.Swagger.SwaggerOptions)).Bind(swaggerOptions);
-
             applicationBuilder.UseSwagger();
 
             applicationBuilder.UseSwaggerUI(options =>
