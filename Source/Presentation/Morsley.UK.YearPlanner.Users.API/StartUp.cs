@@ -58,10 +58,7 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         private void AddApiVersioning(IServiceCollection services)
         {
-            //services.Configure<OpenApiInfo>(_configuration.GetSection(nameof(OpenApiInfo)));
-
-            var openApiInfo = new OpenApiInfo();
-            _configuration.GetSection(nameof(OpenApiInfo)).Bind(openApiInfo);
+            services.Configure<OpenApiInfo>(_configuration.GetSection(nameof(OpenApiInfo)));
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
