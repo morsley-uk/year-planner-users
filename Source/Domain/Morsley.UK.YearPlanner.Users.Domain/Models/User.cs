@@ -17,7 +17,7 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Models
         private string _firstName;
         private string _lastName;
 
-        public Title Title { get; set; }
+        public Title? Title { get; set; }
 
         public string FirstName
         {

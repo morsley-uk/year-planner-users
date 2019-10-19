@@ -333,7 +333,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
 
         #region Helper Methods
 
-        private Title GetDifferent(Title original)
+        private Title GetDifferent(Title? original)
         {
             do
             {

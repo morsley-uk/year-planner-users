@@ -19,8 +19,4 @@
     <ProjectReference Include="..\..\Domain\Morsley.UK.YearPlanner.Users.Domain\Morsley.UK.YearPlanner.Users.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>
