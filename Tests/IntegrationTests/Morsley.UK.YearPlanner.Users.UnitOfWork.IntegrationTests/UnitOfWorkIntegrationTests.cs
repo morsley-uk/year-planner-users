@@ -118,41 +118,11 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
 
         #region Helper Methods
 
-        //private void AddUsersContext(DataContext inMemoryContext, int numberOfUsers)
-        //{
-        //    for (int i = 0; i < numberOfUsers; i++)
-        //    {
-        //        var user = _fixture.Create<User>();
-        //        inMemoryContext.Users.Add(user);
-        //    }
-        //    inMemoryContext.SaveChanges();
-        //}
-
-        //private DataContext Create()
-        //{
-        //    var builder = new DbContextOptionsBuilder<DataContext>()
-        //        .UseInMemoryDatabase(Guid.NewGuid().ToString())
-        //        .EnableSensitiveDataLogging();
-        //    var context = new DataContext(builder.Options);
-        //    return context;
-        //}
-
-        private static IDateTimeService MockDateTimeService()
-        {
-            var service = new MockDateTimeService();
-            return service;
-        }
-
         private static IDateTimeService MockDateTimeService(DateTime now)
         {
             var service = new MockDateTimeService();
             service.SetDateTimeUtcNow(now);
             return service;
-        }
-
-        private static void UpdateMockDateTimeService(IDateTimeService service, DateTime update)
-        {
-            ((MockDateTimeService)service).SetDateTimeUtcNow(update);
         }
 
         #endregion Helper Methods
