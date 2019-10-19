@@ -1,7 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <StartupObject>Morsley.UK.YearPlanner.Users.Persistence.Console.Program</StartupObject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0-preview1.19506.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.0-preview1.19506.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0-preview1.19506.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\_Shared\Morsley.UK.YearPlanner.Users.Shared\Morsley.UK.YearPlanner.Users.Shared.csproj" />
+        <ProjectReference Include="..\Morsley.UK.YearPlanner.Users.Persistence\Morsley.UK.YearPlanner.Users.Persistence.csproj" />
+    </ItemGroup>
 
 </Project>

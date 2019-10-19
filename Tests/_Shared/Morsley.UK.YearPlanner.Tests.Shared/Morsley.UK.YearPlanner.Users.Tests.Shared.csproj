@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.11.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0-preview1.19506.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\Domain\Morsley.UK.YearPlanner.Users.Domain\Morsley.UK.YearPlanner.Users.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Source\Infrastructure\Morsley.UK.YearPlanner.Users.Persistence\Morsley.UK.YearPlanner.Users.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>
