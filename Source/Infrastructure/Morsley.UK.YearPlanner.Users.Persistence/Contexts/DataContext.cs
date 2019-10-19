@@ -12,7 +12,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Contexts
 
         }
 
-        public DbSet<Address> Addresses { get; set; }
+        //public DbSet<Address> Addresses { get; set; }
 
         //public DbSet<Country> Countries { get; set; }
 
@@ -34,6 +34,18 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Contexts
                 .Entity<User>()
                 .Property(u => u.Sex)
                 .HasConversion(s => s.ToString(), s => (Sex)Enum.Parse(typeof(Sex), s));
+            modelBuilder
+                .Entity<User>()
+                .Property(u => u.Title)
+                .HasConversion(s => s.ToString(), t => (Title)Enum.Parse(typeof(Title), t));
+            modelBuilder
+                .Entity<User>()
+                .Property(u => u.FirstName)
+                .IsRequired();
+            modelBuilder
+                .Entity<User>()
+                .Property(u => u.LastName)
+                .IsRequired();
         }
     }
 }
