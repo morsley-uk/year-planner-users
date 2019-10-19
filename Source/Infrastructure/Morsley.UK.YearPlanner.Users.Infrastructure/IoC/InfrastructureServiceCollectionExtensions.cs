@@ -9,7 +9,6 @@ namespace Morsley.UK.YearPlanner.Users.Infrastructure.IoC
         {
             services.AddScoped<IDateTimeService, DateTimeService>();
             services.AddScoped<IEnvironmentService, EnvironmentService>();
-            //services.AddScoped<ILogger, SerilogLogger>(); // Logger
 
             return services;
         }

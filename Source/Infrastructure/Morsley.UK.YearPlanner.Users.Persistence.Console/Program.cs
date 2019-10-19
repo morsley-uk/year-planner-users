@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Morsley.UK.YearPlanner.Users.Persistence.Contexts;
-using Morsley.UK.YearPlanner.Users.Shared;
+using System;
 
 namespace Morsley.UK.YearPlanner.Users.Persistence.Console
 {
@@ -10,7 +9,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Console
     {
         public static void Main(string[] args)
         {
-            System.Console.WriteLine("Expect the Data Connection String to be in an environment variable: {0}", Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+            System.Console.WriteLine("Expecting the Data Connection String to be in an environment variable: {0}", Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
 
             if (!TryGetConnectionString(out var connectionString))
             {
@@ -19,7 +18,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Console
 
             SetUpDependencyInjection(connectionString);
 
-            System.Console.WriteLine("Hello World!");
+            System.Console.WriteLine("Finished! :-)");
         }
 
         private static void SetUpDependencyInjection(string connectionString)
