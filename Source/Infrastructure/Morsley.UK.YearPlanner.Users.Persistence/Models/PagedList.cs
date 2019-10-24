@@ -39,7 +39,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Models
 
         public static async Task<PagedList<T>> Create(IQueryable<T> source, int pageNumber, int pageSize)
         {
-            if (source == null) { throw new ArgumentNullException(nameof(source), "Cannot be null!"); }
+            if (source == null) throw new ArgumentNullException(nameof(source), "Cannot be null!");
             if (pageNumber == 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Must be greater than zero!");
             if (pageSize == 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Must be greater than zero!");
 
