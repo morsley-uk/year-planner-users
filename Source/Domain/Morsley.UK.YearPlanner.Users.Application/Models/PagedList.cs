@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
+﻿using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace Morsley.UK.YearPlanner.Users.Persistence.Models
+namespace Morsley.UK.YearPlanner.Users.Application.Models
 {
     public class PagedList<T> : List<T>, IPagedList<T>
     {
@@ -37,9 +35,9 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Models
 
         public bool HasNext => CurrentPage < TotalPages;
 
-        public static async Task<PagedList<T>> Create(IQueryable<T> source, int pageNumber, int pageSize)
+        public static PagedList<T> Create(IQueryable<T> source, int pageNumber, int pageSize)
         {
-            if (source == null) { throw new ArgumentNullException(nameof(source), "Cannot be null!"); }
+            if (source == null) {throw new ArgumentNullException(nameof(source), "Cannot be null!");}
             if (pageNumber == 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Must be greater than zero!");
             if (pageSize == 0) throw new ArgumentOutOfRangeException(nameof(pageSize), "Must be greater than zero!");
 
@@ -50,7 +48,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Models
             }
             else
             {
-                var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+                var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
                 return new PagedList<T>(items, count, pageNumber, pageSize);
             }
         }

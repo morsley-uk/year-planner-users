@@ -1,6 +1,5 @@
 using AutoFixture;
 using FluentAssertions;
-using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
 using Morsley.UK.YearPlanner.Users.Persistence.Repositories;
 using Morsley.UK.YearPlanner.Users.Tests.Shared;
@@ -31,7 +30,7 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             var inMemoryContext = InMemoryContextHelper.Create();
             var userRepository = new UserRepository(inMemoryContext);
             var dt = _fixture.Create<DateTime>();
-            var mockDateTimeService = MockDateTimeService(dt);
+            var mockDateTimeService = MockDateTimeServiceHelper.Create(dt);
             var sut = new Persistence.UnitOfWork(inMemoryContext, mockDateTimeService, userRepository);
 
             // Act...
@@ -58,17 +57,17 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             var userId = user.Id;
             var userRepository = new UserRepository(inMemoryContext);
             var dt = _fixture.Create<DateTime>();
-            var mockDateTimeService = MockDateTimeService(dt);
+            var mockDateTimeService = MockDateTimeServiceHelper.Create(dt);
             var sut = new Persistence.UnitOfWork(inMemoryContext, mockDateTimeService, userRepository);
 
             // Act...
             var update = await sut.UserRepository.Get(userId);
             var newFirstName = _fixture.Create<string>();
-            update.FirstName = newFirstName;
+            update.SetFirstName(newFirstName);
             await sut.CompleteAsync();
 
-            // Assert...
             update.Updated.Should().NotBeNull();
+            // Assert...
             update.Updated.Should().Be(dt);
             update.FirstName.Should().Be(newFirstName);
             sut.Dispose();
@@ -81,7 +80,7 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             var inMemoryContext = InMemoryContextHelper.Create();
             var userRepository = new UserRepository(inMemoryContext);
             var dt = _fixture.Create<DateTime>();
-            var mockDateTimeService = MockDateTimeService(dt);
+            var mockDateTimeService = MockDateTimeServiceHelper.Create(dt);
             var sut = new Persistence.UnitOfWork(inMemoryContext, mockDateTimeService, userRepository);
             var user = _fixture.Create<User>();
             inMemoryContext.Users.Add(user);
@@ -102,7 +101,7 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             var inMemoryContext = InMemoryContextHelper.Create();
             var userRepository = new UserRepository(inMemoryContext);
             var dt = _fixture.Create<DateTime>();
-            var mockDateTimeService = MockDateTimeService(dt);
+            var mockDateTimeService = MockDateTimeServiceHelper.Create(dt);
             var sut = new Persistence.UnitOfWork(inMemoryContext, mockDateTimeService, userRepository);
             var user = _fixture.Create<User>();
             inMemoryContext.Users.Add(user);
@@ -117,13 +116,6 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
         }
 
         #region Helper Methods
-
-        private static IDateTimeService MockDateTimeService(DateTime now)
-        {
-            var service = new MockDateTimeService();
-            service.SetDateTimeUtcNow(now);
-            return service;
-        }
 
         #endregion Helper Methods
     }

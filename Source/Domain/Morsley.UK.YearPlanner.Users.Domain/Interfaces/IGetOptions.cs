@@ -8,7 +8,7 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Interfaces
 
         int PageNumber { get; }
 
-        string SearchQuery { get; }
+        string? SearchQuery { get; }
 
         IEnumerable<IFilter> Filters { get; }
 

@@ -1,7 +1,7 @@
 using AutoFixture;
 using FluentAssertions;
+using Morsley.UK.YearPlanner.Users.Application.Models;
 using Morsley.UK.YearPlanner.Users.Domain.Enumerations;
-using Morsley.UK.YearPlanner.Users.Persistence.Models;
 using Morsley.UK.YearPlanner.Users.Persistence.Repositories;
 using Morsley.UK.YearPlanner.Users.Tests.Shared;
 using Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture;
@@ -10,13 +10,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
+namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
 {
-    public class UserRepositoryUnitTests
+    public class UserRepositoryIntegrationTests
     {
         private readonly Fixture _fixture;
 
-        public UserRepositoryUnitTests()
+        public UserRepositoryIntegrationTests()
         {
             _fixture = new Fixture();
             _fixture.Customizations.Insert(0, new EnumSpecimenBuilder<Title>());
@@ -65,7 +65,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 1);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 1);
             var sut = new UserRepository(inMemoryContext);
             var getUsersOptions = new GetOptions();
 
@@ -87,7 +87,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 30);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 30);
             var sut = new UserRepository(inMemoryContext);
             var getUsersOptions = new GetOptions
             {
@@ -113,7 +113,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 30);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 30);
             var sut = new UserRepository(inMemoryContext);
             var getUsersOptions = new GetOptions
             {
@@ -139,7 +139,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 30);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 30);
             var sut = new UserRepository(inMemoryContext);
             var getUsersOptions = new GetOptions
             {
@@ -165,7 +165,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 1);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 1);
             var onlyUser = inMemoryContext.Users.First();
             var sut = new Persistence.Repositories.UserRepository(inMemoryContext);
 
@@ -183,7 +183,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 1);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 1);
             var sut = new Persistence.Repositories.UserRepository(inMemoryContext);
             var randomFirstName = _fixture.Create<string>();
 
@@ -200,7 +200,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 1);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 1);
             var onlyUser = inMemoryContext.Users.First();
             var sut = new Persistence.Repositories.UserRepository(inMemoryContext);
             var getOptions = new GetOptions();
@@ -220,7 +220,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 1);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 1);
             var onlyUser = inMemoryContext.Users.First();
             var sut = new Persistence.Repositories.UserRepository(inMemoryContext);
             var getOptions = new GetOptions();
@@ -241,7 +241,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 2);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 2);
             var onlyUser = inMemoryContext.Users.First();
             var sut = new Persistence.Repositories.UserRepository(inMemoryContext);
             var getOptions = new GetOptions();
@@ -261,7 +261,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 2);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 2);
             var onlyUser = inMemoryContext.Users.First();
             var sut = new Persistence.Repositories.UserRepository(inMemoryContext);
             var getOptions = new GetOptions();
@@ -282,7 +282,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 3);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 3);
             var sut = new UserRepository(inMemoryContext);
             var getOptions = new GetOptions();
             var ordering = new Ordering("FirstName", SortOrder.Descending);
@@ -309,7 +309,7 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
         {
             // Arrange...
             var inMemoryContext = InMemoryContextHelper.Create();
-            InMemoryContextHelper.AddUsersContext(_fixture, inMemoryContext, 3);
+            InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 3);
             var sut = new UserRepository(inMemoryContext);
             var getOptions = new GetOptions();
             var ordering = new Ordering("FirstName", SortOrder.Ascending);

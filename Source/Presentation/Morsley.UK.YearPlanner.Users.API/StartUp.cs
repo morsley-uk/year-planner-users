@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Morsley.UK.YearPlanner.Users.API.Swagger;
+using Morsley.UK.YearPlanner.Users.Application.IoC;
+using Morsley.UK.YearPlanner.Users.Infrastructure.IoC;
+using Morsley.UK.YearPlanner.Users.Persistence.IoC;
+using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
 
 namespace Morsley.UK.YearPlanner.Users.API
 {
@@ -27,6 +33,38 @@ namespace Morsley.UK.YearPlanner.Users.API
             services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             AddApiVersioning(services);
+
+            //AddMediatR(services);
+
+            services.AddApplication();
+
+            AddInfrastructure(services);
+
+            AddPersistence(services);
+        }
+
+        private void AddInfrastructure(IServiceCollection services)
+        {
+            services.AddInfrastructure();
+        }
+
+        private static void AddPersistence(IServiceCollection services)
+        {
+            var settings = Shared.Environment.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+
+            if (string.IsNullOrEmpty(settings))
+            {
+                Log.Fatal("Could not determine Persistence Key! :-(");
+                return;
+            }
+
+            services.AddPersistence(settings);
+        }
+
+        private void AddMediatR(IServiceCollection services)
+        {
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            services.AddMediatR(executingAssembly);
         }
 
         // Pipeline...
