@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.Kernel;
 using Morsley.UK.YearPlanner.Users.Domain.Enumerations;
+using Morsley.UK.YearPlanner.Users.Domain.Models;
 using System;
 
 namespace Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture
@@ -19,11 +20,12 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture
 
             if (type != typeof(Domain.Models.User)) return new NoSpecimen();
 
-            var user = new Domain.Models.User();
+            var firstName = nameof(User.FirstName) + "___" + context.Create<string>();
+            var lastName = nameof(User.LastName) + "___" + context.Create<string>();
+
+            var user = new Domain.Models.User(firstName, lastName);
 
             user.Title = context.Create<Title>();
-            user.FirstName = nameof(user.FirstName) + "___" + context.Create<string>();
-            user.LastName = nameof(user.LastName) + "___" + context.Create<string>();
             user.Sex = context.Create<Sex>();
 
             user.Created = DateTime.MinValue;

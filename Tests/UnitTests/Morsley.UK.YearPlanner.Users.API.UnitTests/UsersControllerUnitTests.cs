@@ -1,150 +1,191 @@
+using AutoFixture;
+using AutoMapper;
 using FluentAssertions;
-using Microsoft.AspNetCore.JsonPatch;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Morsley.UK.YearPlanner.Users.API.Controllers.v1;
-using Morsley.UK.YearPlanner.Users.API.Models;
+using Morsley.UK.YearPlanner.Users.API.Models.v1.Request;
+using NSubstitute;
 using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Morsley.UK.YearPlanner.Users.API.UnitTests
 {
     public class UsersControllerUnitTests
     {
-        [Fact]
-        public void GET_Should_Return_BadRequest_When_Request_Is_Null()
+        //private readonly Fixture _fixture;
+
+        //public UsersControllerUnitTests()
+        //{
+        //    _fixture = new Fixture();
+        //}
+
+        public class UnhappyPath
         {
-            // Arrange...
-            var sut = new UsersController();
-            const GetUsersRequest request = null;
+            [Fact]
+            [Category("Unhappy Path")]
+            //[Trait("Category", "Unhappy Path")]
+            public async Task GET_Plural_Should_Return_BadRequest_When_Request_Is_Null()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                //var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                const GetUsersRequest request = null;
 
-            // Act...
-            var result = sut.Get(request);
+                // Act...
+                var result = await sut.Get(request);
 
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<BadRequestResult>();
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<BadRequestResult>();
+            }
+
+            [Fact]
+            public async Task GET_Single_Should_Return_BadRequest_When_Request_Is_Null()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                const GetUserRequest request = null;
+
+                // Act...
+                var result = await sut.Get(request);
+
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<BadRequestResult>();
+            }
+
+            [Fact]
+            public async Task POST_Should_Return_BadRequest_When_Request_Is_Null()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                const CreateUserRequest request = null;
+
+                // Act...
+                var result = await sut.Add(request);
+
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<BadRequestResult>();
+            }
+
+            [Fact]
+            public async Task DELETE_Should_Return_BadRequest_When_Request_Is_Null()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                const DeleteUserRequest request = null;
+
+                // Act...
+                var result = await sut.Delete(request);
+
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<BadRequestResult>();
+            }
+
+            [Fact]
+            public async Task PUT_Should_Return_Bad_Request_When_Request_Is_Null()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                var userId = Guid.NewGuid();
+                const UpdateUserRequest request = null;
+
+                // Act...
+                var result = await sut.Update(userId, request);
+
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<BadRequestResult>();
+            }
+
+            [Fact]
+            public async Task PATCH_Should_Return_Bad_Request_When_PatchDocument_Is_Null()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                var userId = Guid.NewGuid();
+                //const JsonPatchDocument<UpdateUserRequest> patchDocument = null;
+                const PartiallyUpdateUserRequest request = null;
+
+                // Act...
+                //var result = sut.Update(userId, patchDocument);
+                var result = await sut.Update(userId, request);
+
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<BadRequestResult>();
+            }
         }
 
-        [Fact]
-        public void GET_Should_Return_NoContent_When_No_Users_Exist()
+        public class HappyPath
         {
-            // Arrange...
-            var sut = new UsersController();
-            var request = new GetUsersRequest();
+            [Fact]
+            public async Task GET_Plural_Should_Return_NoContent_When_No_Users_Exist()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                var request = new GetUsersRequest();
 
-            // Act...
-            var response = sut.Get(request);
+                // Act...
+                var response = await sut.Get(request);
 
-            // Assert...
-            response.Should().NotBeNull();
-            response.Should().BeAssignableTo<NoContentResult>();
-        }
+                // Assert...
+                response.Should().NotBeNull();
+                response.Should().BeAssignableTo<NoContentResult>();
+            }
 
-        [Fact]
-        public void GET_By_Id_Should_Return_BadRequest_When_Id_Is_Default()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            var id = Guid.Empty;
+            [Fact]
+            public async Task GET_Single_Should_Return_NoContent_When_No_Users_Exist()
+            {
+                // Arrange...
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                var request = new GetUserRequest();
 
-            // Act...
-            var result = sut.Get(id);
+                // Act...
+                var response = await sut.Get(request);
 
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<BadRequestResult>();
-        }
+                // Assert...
+                response.Should().NotBeNull();
+                response.Should().BeAssignableTo<NoContentResult>();
+            }
 
-        [Fact]
-        public void GET_By_Id_Should_Return_NoContent_When_No_Users_Exist()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            var userId = Guid.NewGuid();
+            [Fact]
+            public async Task POST_Should_Return_Created_When_Request_Is_Successful()
+            {
+                // Arrange...
+                var fixture = new Fixture();
+                var mockMediator = Substitute.For<IMediator>();
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator); //, mockMapper);
+                var request = fixture.Create<CreateUserRequest>();
 
-            // Act...
-            var response = sut.Get(userId);
+                // Act...
+                var result = await sut.Add(request);
 
-            // Assert...
-            response.Should().NotBeNull();
-            response.Should().BeAssignableTo<NoContentResult>();
-        }
-
-        [Fact]
-        public void POST_Should_Return_BadRequest_When_Request_Is_Null()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            const CreateUserRequest request = null;
-
-            // Act...
-            var result = sut.Add(request);
-
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<BadRequestResult>();
-        }
-
-        [Fact]
-        public void POST_Should_Return_Created_When_Request_Is_Successful()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            var request = new CreateUserRequest();
-
-            // Act...
-            var result = sut.Add(request);
-
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<CreatedAtActionResult>();
-        }
-
-        [Fact]
-        public void DELETE_Should_Return_BadRequest_When_Id_Is_Default()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            var id = Guid.Empty;
-
-            // Act...
-            var result = sut.Delete(id);
-
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<BadRequestResult>();
-        }
-
-        [Fact]
-        public void PUT_Should_Return_Bad_Request_When_Request_Is_Null()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            var userId = Guid.NewGuid();
-            const API.Models.UpdateUserRequest request = null;
-
-            // Act...
-            var result = sut.Update(userId, request);
-
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<BadRequestResult>();
-        }
-
-        [Fact]
-        public void PATCH_Should_Return_Bad_Request_When_PatchDocument_Is_Null()
-        {
-            // Arrange...
-            var sut = new UsersController();
-            var userId = Guid.NewGuid();
-            const JsonPatchDocument<UpdateUserRequest> patchDocument = null;
-
-            // Act...
-            var result = sut.Update(userId, patchDocument);
-
-            // Assert...
-            result.Should().NotBeNull();
-            result.Should().BeAssignableTo<BadRequestResult>();
+                // Assert...
+                result.Should().NotBeNull();
+                result.Should().BeAssignableTo<CreatedAtActionResult>();
+            }
         }
     }
 }

@@ -1,12 +1,10 @@
 ﻿using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
 using Morsley.UK.YearPlanner.Users.Persistence.Contexts;
-using Morsley.UK.YearPlanner.Users.Persistence.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace Morsley.UK.YearPlanner.Users.Persistence.Repositories
 {

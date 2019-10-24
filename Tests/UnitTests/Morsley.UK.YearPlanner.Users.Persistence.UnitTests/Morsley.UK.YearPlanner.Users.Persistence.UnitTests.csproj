@@ -7,14 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoFixture" Version="4.11.0" />
     <PackageReference Include="FluentAssertions" Version="5.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="NSubstitute" Version="4.2.1" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Source\Domain\Morsley.UK.YearPlanner.Users.Application\Morsley.UK.YearPlanner.Users.Application.csproj" />
     <ProjectReference Include="..\..\..\Source\Domain\Morsley.UK.YearPlanner.Users.Domain\Morsley.UK.YearPlanner.Users.Domain.csproj" />
     <ProjectReference Include="..\..\..\Source\Infrastructure\Morsley.UK.YearPlanner.Users.Persistence\Morsley.UK.YearPlanner.Users.Persistence.csproj" />
     <ProjectReference Include="..\..\_Shared\Morsley.UK.YearPlanner.Tests.Shared\Morsley.UK.YearPlanner.Users.Tests.Shared.csproj" />

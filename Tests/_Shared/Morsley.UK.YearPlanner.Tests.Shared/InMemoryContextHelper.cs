@@ -18,7 +18,13 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared
             return context;
         }
 
-        public static void AddUsersContext(DataContext inMemoryContext, IEnumerable<User> users)
+        public static void AddUserToContext(DataContext inMemoryContext, User user)
+        {
+            inMemoryContext.Add(user);
+            inMemoryContext.SaveChanges();
+        }
+
+        public static void AddUsersToContext(DataContext inMemoryContext, IEnumerable<User> users)
         {
             foreach (var user in users)
             {
@@ -27,7 +33,7 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared
             inMemoryContext.SaveChanges();
         }
 
-        public static void AddUsersContext(
+        public static void AddUsersToContext(
             Fixture fixture,
             DataContext inMemoryContext,
             int numberOfUsers)
@@ -38,7 +44,7 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared
                 var user = fixture.Create<User>();
                 users.Add(user);
             }
-            AddUsersContext(inMemoryContext, users);
+            AddUsersToContext(inMemoryContext, users);
         }
     }
 }

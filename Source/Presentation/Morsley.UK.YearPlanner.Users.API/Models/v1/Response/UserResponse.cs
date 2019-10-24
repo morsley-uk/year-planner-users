@@ -1,17 +1,17 @@
 ﻿using System;
 
-namespace Morsley.UK.YearPlanner.Users.API.Models
+namespace Morsley.UK.YearPlanner.Users.API.Models.v1.Response
 {
     public class UserResponse
     {
         public Guid Id { get; set; }
 
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
-        public string Sex { get; set; }
+        public string? Sex { get; set; }
     }
 }

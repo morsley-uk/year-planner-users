@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Morsley.UK.YearPlanner.Users.Persistence.Models
+namespace Morsley.UK.YearPlanner.Users.Application.Models
 {
     public class GetOptions : IGetOptions
     {
@@ -19,7 +19,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Models
 
         public int PageNumber { get; set; } = 1;
 
-        public string SearchQuery { get; set; }
+        public string? SearchQuery { get; set; }
 
         public IEnumerable<IFilter> Filters => _filters;
 

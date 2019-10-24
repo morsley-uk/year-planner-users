@@ -1,7 +1,7 @@
 ﻿using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using System;
 
-namespace Morsley.UK.YearPlanner.Users.Persistence.Models
+namespace Morsley.UK.YearPlanner.Users.Application.Models
 {
     public class Filter : IFilter
     {

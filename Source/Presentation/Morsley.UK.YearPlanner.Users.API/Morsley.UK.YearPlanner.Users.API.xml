@@ -4,7 +4,7 @@
         <name>Morsley.UK.YearPlanner.Users.API</name>
     </assembly>
     <members>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(Morsley.UK.YearPlanner.Users.API.Models.GetUsersRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(Morsley.UK.YearPlanner.Users.API.Models.v1.Request.GetUsersRequest)">
             <summary>
             Get a page of users
             </summary>
@@ -15,7 +15,7 @@
             <response code="204">Success - No Content - No users matched given criteria</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(System.Guid)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(Morsley.UK.YearPlanner.Users.API.Models.v1.Request.GetUserRequest)">
             <summary>
             Get a user
             </summary>
@@ -25,7 +25,7 @@
             <response code="204">Success - No Content - No user matched the given identifier</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Add(Morsley.UK.YearPlanner.Users.API.Models.CreateUserRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Add(Morsley.UK.YearPlanner.Users.API.Models.v1.Request.CreateUserRequest)">
             <summary>
             Add a user
             </summary>
@@ -34,7 +34,7 @@
             <response code="201">Success - Created - The user was successfully created</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response> 
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.UpdateUserRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.v1.Request.UpdateUserRequest)">
             <summary>
             Fully update a user
             </summary>
@@ -45,7 +45,7 @@
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
             <response code="404">Error - Not Found - No user matched the given identifier</response>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Morsley.UK.YearPlanner.Users.API.Models.UpdateUserRequest})">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.v1.Request.PartiallyUpdateUserRequest)">
             <summary>
             Fully or partially update a user
             </summary>
@@ -70,7 +70,7 @@
             ] \
             </remarks>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Delete(System.Guid)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Delete(Morsley.UK.YearPlanner.Users.API.Models.v1.Request.DeleteUserRequest)">
             <summary>
             Delete a user
             </summary>
