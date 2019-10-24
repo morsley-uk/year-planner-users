@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
-using Morsley.UK.YearPlanner.Users.API.Models.v1.Request;
 using Morsley.UK.YearPlanner.Users.API.Models.v1.Response;
 using Morsley.UK.YearPlanner.Users.Application.Commands;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
@@ -52,7 +51,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromBody] GetUsersRequest request)
+        public async Task<IActionResult> Get([FromBody] API.Models.v1.Request.GetUsersRequest request)
         {
             if (request == null) return BadRequest();
 
@@ -76,7 +75,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromRoute] GetUserRequest request)
+        public async Task<IActionResult> Get([FromRoute] API.Models.v1.Request.GetUserRequest request)
         {
             if (request == null) return BadRequest();
 
@@ -102,7 +101,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Add([FromBody] CreateUserRequest request)
+        public async Task<IActionResult> Add([FromBody] API.Models.v1.Request.CreateUserRequest request)
         {
             if (request == null) return BadRequest();
 
@@ -124,14 +123,13 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// <response code="200">Success - OK - The user was successfully updated</response>
         /// <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         /// <response code="404">Error - Not Found - No user matched the given identifier</response>
-
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(
             [FromRoute] Guid id,
-            [FromBody] UpdateUserRequest request)
+            [FromBody] API.Models.v1.Request.UpdateUserRequest request)
         {
             if (request == null) return BadRequest();
             request.Id = id;
@@ -175,8 +173,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Update(
             [FromRoute] Guid id,
-            /*[FromBody] JsonPatchDocument<UpdateUserRequest> patchDocument)*/
-            [FromBody] PartiallyUpdateUserRequest request)
+            [FromBody] API.Models.v1.Request.PartiallyUpdateUserRequest request)
         {
             //if (patchDocument == null) return BadRequest();
             if (request == null) return BadRequest();
@@ -205,7 +202,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] DeleteUserRequest request)
+        public async Task<IActionResult> Delete([FromRoute] API.Models.v1.Request.DeleteUserRequest request)
         {
             if (request == null) return BadRequest();
 
@@ -218,7 +215,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
         #region Methods
 
-        private async Task<UserResponse> AddUser(CreateUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse> AddUser(API.Models.v1.Request.CreateUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -230,7 +227,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return new UserResponse { Id = addedUserId };
         }
 
-        private async Task DeleteUser(DeleteUserRequest request)
+        private async Task DeleteUser(API.Models.v1.Request.DeleteUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -242,7 +239,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return;
         }
 
-        private async Task<UserResponse> GetUser(GetUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse> GetUser(API.Models.v1.Request.GetUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -258,7 +255,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return userResponse;
         }
 
-        private async Task<IPagedList<UserResponse>> GetUsers(GetUsersRequest request)
+        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUsers(API.Models.v1.Request.GetUsersRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -273,7 +270,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return pageOfUserResponses;
         }
 
-        private async Task<UserResponse> UpdateUser(UpdateUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse> UpdateUser(API.Models.v1.Request.UpdateUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -288,7 +285,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return updatedUserResponse;
         }
 
-        private async Task<UserResponse> UpdateUser(PartiallyUpdateUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse> UpdateUser(API.Models.v1.Request.PartiallyUpdateUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -302,22 +299,6 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
             return updatedUserResponse;
         }
-
-        //private UserResponse UpdateUser(Guid id, JsonPatchDocument<UpdateUserRequest> patchDocument)
-        //{
-        //    if (id == default(Guid)) throw new ArgumentNullException(nameof(id));
-        //    if (patchDocument == null) throw new ArgumentNullException(nameof(patchDocument));
-
-        //    // ToDo --> Use AutoMapper!
-        //    var partialUpdateUserCommand = new PartialUpdateUserCommand();
-
-        //    var updatedUser = _mediator.Send(partialUpdateUserCommand);
-
-        //    // ToDo --> Use AutoMapper!
-        //    var updatedUserResponse = new UserResponse();
-
-        //    return updatedUserResponse;
-        //}
 
         #endregion Methods
     }
