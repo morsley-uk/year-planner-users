@@ -7,6 +7,9 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Models
 {
     public class User : Entity<Guid>
     {
+        private string _firstName;
+        private string _lastName;
+
         private IList<Address> _addresses;
         private IList<Email> _emails;
         private IList<Phone> _phones;
@@ -26,9 +29,17 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Models
 
         public Title? Title { get; set; }
 
-        public string FirstName { get; protected set; }
+        public string FirstName
+        {
+            get => _firstName;
+            set => SetFirstName(value);
+        }
 
-        public string LastName { get; protected set; }
+        public string LastName
+        {
+            get => _lastName;
+            set => SetLastName(value);
+        }
 
         public Sex? Sex { get; set; }
 
@@ -62,16 +73,16 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Models
             _phones.Add(newPhone);
         }
 
-        public void SetFirstName(string firstName)
+        private void SetFirstName(string firstName)
         {
             if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("Cannot be null or empty!", nameof(firstName));
-            FirstName = firstName;
+            _firstName = firstName;
         }
 
-        public void SetLastName(string lastName)
+        private void SetLastName(string lastName)
         {
             if (string.IsNullOrWhiteSpace(lastName)) throw new ArgumentException("Cannot be null or empty!", nameof(lastName));
-            LastName = lastName;
+            _lastName = lastName;
         }
     }
 }
