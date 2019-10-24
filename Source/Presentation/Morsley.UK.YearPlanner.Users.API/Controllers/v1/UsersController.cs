@@ -175,12 +175,9 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             [FromRoute] Guid id,
             [FromBody] API.Models.v1.Request.PartiallyUpdateUserRequest request)
         {
-            //if (patchDocument == null) return BadRequest();
             if (request == null) return BadRequest();
             request.Id = id;
 
-            // ToDo --> Update the user on the system
-            //var updatedUser = UpdateUser(id, patchDocument);
             var updatedUser = await UpdateUser(request);
 
             return Ok(updatedUser);
