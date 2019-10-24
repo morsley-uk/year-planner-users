@@ -16,11 +16,8 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Models
 
         public User(string firstName, string lastName)
         {
-            if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("Cannot be null or empty!", nameof(firstName));
-            if (string.IsNullOrWhiteSpace(lastName)) throw new ArgumentException("Cannot be null or empty!", nameof(lastName));
-
-            FirstName = firstName;
-            LastName = lastName;
+            SetFirstName(firstName);
+            SetLastName(lastName);
 
             _addresses = new List<Address>();
             _emails = new List<Email>();
