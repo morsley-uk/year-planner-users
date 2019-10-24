@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +13,6 @@ using Morsley.UK.YearPlanner.Users.Infrastructure.IoC;
 using Morsley.UK.YearPlanner.Users.Persistence.IoC;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
 
 namespace Morsley.UK.YearPlanner.Users.API
 {
@@ -33,8 +31,6 @@ namespace Morsley.UK.YearPlanner.Users.API
             services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             AddApiVersioning(services);
-
-            //AddMediatR(services);
 
             services.AddApplication();
 
@@ -59,12 +55,6 @@ namespace Morsley.UK.YearPlanner.Users.API
             }
 
             services.AddPersistence(settings);
-        }
-
-        private void AddMediatR(IServiceCollection services)
-        {
-            var executingAssembly = Assembly.GetExecutingAssembly();
-            services.AddMediatR(executingAssembly);
         }
 
         // Pipeline...

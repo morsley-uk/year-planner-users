@@ -63,11 +63,11 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             // Act...
             var update = await sut.UserRepository.Get(userId);
             var newFirstName = _fixture.Create<string>();
-            update.SetFirstName(newFirstName);
+            update.FirstName = newFirstName;
             await sut.CompleteAsync();
 
-            update.Updated.Should().NotBeNull();
             // Assert...
+            update.Updated.Should().NotBeNull();
             update.Updated.Should().Be(dt);
             update.FirstName.Should().Be(newFirstName);
             sut.Dispose();

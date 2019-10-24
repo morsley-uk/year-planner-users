@@ -33,8 +33,8 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
         private void UpdateUserFromCommand(User user, PartialUpdateUserCommand command)
         {
             if (user.Title != command.Title) user.Title = command.Title;
-            if (user.FirstName != command.FirstName) user.SetFirstName(command.FirstName);
-            if (user.FirstName != command.FirstName) user.SetFirstName(command.FirstName);
+            if (user.FirstName != command.FirstName) user.FirstName = command.FirstName;
+            if (user.LastName != command.LastName) user.LastName = command.LastName;
             if (user.Sex != command.Sex) user.Sex = command.Sex;
         }
     }

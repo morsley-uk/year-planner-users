@@ -24,8 +24,8 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
 
             // ToDo --> Use AutoMapper?
             user.Title = command.Title;
-            user.SetFirstName(command.FirstName);
-            user.SetLastName(command.LastName);
+            user.FirstName = command.FirstName;
+            user.LastName = command.LastName;
             user.Sex = command.Sex;
 
             var numberOfRowsAffected = await _unitOfWork.CompleteAsync();
