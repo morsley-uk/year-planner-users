@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿//using AutoMapper;
 using MediatR;
 using Morsley.UK.YearPlanner.Users.Application.Models;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
@@ -12,7 +12,7 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
     public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IPagedList<User>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        //private readonly IMapper _mapper;
 
         public GetUsersQueryHandler(IUnitOfWork unitOfWork) //, IMapper mapper)
         {

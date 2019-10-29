@@ -31,8 +31,8 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             {
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
-                //var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var mockMapper = Substitute.For<IMapper>();
+                var sut = new UsersController(mockMediator, mockMapper);
                 const GetUsersRequest request = null;
 
                 // Act...
@@ -49,7 +49,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 const GetUserRequest request = null;
 
                 // Act...
@@ -66,7 +66,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 const CreateUserRequest request = null;
 
                 // Act...
@@ -83,7 +83,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 const DeleteUserRequest request = null;
 
                 // Act...
@@ -100,7 +100,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 var userId = Guid.NewGuid();
                 const UpdateUserRequest request = null;
 
@@ -118,7 +118,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 var userId = Guid.NewGuid();
                 //const JsonPatchDocument<UpdateUserRequest> patchDocument = null;
                 const PartiallyUpdateUserRequest request = null;
@@ -141,7 +141,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 var request = new GetUsersRequest();
 
                 // Act...
@@ -158,7 +158,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 // Arrange...
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 var request = new GetUserRequest();
 
                 // Act...
@@ -176,7 +176,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 var fixture = new Fixture();
                 var mockMediator = Substitute.For<IMediator>();
                 var mockMapper = Substitute.For<IMapper>();
-                var sut = new UsersController(mockMediator); //, mockMapper);
+                var sut = new UsersController(mockMediator, mockMapper);
                 var request = fixture.Create<CreateUserRequest>();
 
                 // Act...
@@ -184,7 +184,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
 
                 // Assert...
                 result.Should().NotBeNull();
-                result.Should().BeAssignableTo<CreatedAtActionResult>();
+                result.Should().BeAssignableTo<CreatedAtRouteResult>();
             }
         }
     }

@@ -8,7 +8,7 @@
             <summary>
             Get a page of users
             </summary>
-            <param name="request">
+            <param name="getUsersRequest">
             A GetUsersRequest object which contains fields for paging, searching, filtering, sorting and shaping user data</param>
             <returns>A page of users</returns>
             <response code="200">Success - OK - Returns the requested page of users</response>
@@ -19,7 +19,7 @@
             <summary>
             Get a user
             </summary>
-            <param name="id">The unique identifier of the user</param>
+            <param name="getUserRequest">The unique identifier of the user</param>
             <returns>The requested user</returns>
             <response code="200">Success - OK - Returns the requested user</response>
             <response code="204">Success - No Content - No user matched the given identifier</response>

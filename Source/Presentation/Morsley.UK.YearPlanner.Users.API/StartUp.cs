@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Morsley.UK.YearPlanner.Users.Infrastructure.IoC;
 using Morsley.UK.YearPlanner.Users.Persistence.IoC;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
 
 namespace Morsley.UK.YearPlanner.Users.API
 {
@@ -28,11 +30,19 @@ namespace Morsley.UK.YearPlanner.Users.API
         // Dependency Injection...
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            //services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
+            services.AddMvcCore();
 
             AddApiVersioning(services);
 
             services.AddApplication();
+
+            //var executingAssembly = Assembly.GetExecutingAssembly();
+            //services.AddAutoMapper(executingAssembly);
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            services.AddAutoMapper(assemblies);
 
             AddInfrastructure(services);
 
@@ -70,14 +80,14 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             applicationBuilder.UseHttpsRedirection();
 
-            applicationBuilder.UseRouting();
+            //applicationBuilder.UseRouting();
 
-            applicationBuilder.UseAuthorization();
+            //applicationBuilder.UseAuthorization();
 
-            applicationBuilder.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            //applicationBuilder.UseEndpoints(endpoints =>
+            //{
+            //    endpoints.MapControllers();
+            //});
 
             ConfigureApiVersioning(applicationBuilder, apiVersionDescriptionProvider);
         }

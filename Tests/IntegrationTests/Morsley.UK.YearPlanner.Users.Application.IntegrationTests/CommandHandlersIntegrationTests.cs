@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoMapper;
 using FluentAssertions;
 using Morsley.UK.YearPlanner.Users.Application.Commands;
 using Morsley.UK.YearPlanner.Users.Application.Handlers;
@@ -29,13 +30,14 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task AddUserHandler_Should_Add_User()
         {
             // Arrange...
-            var mockUnitOfWork = GetMockUnitOfWork(out var inMemoryContext);
-            var sut = new AddUserCommandHandler(mockUnitOfWork);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
+            var mapper = GetMapper();
+            var sut = new AddUserCommandHandler(unitOfWork, mapper);
             var addUserCommand = _fixture.Create<AddUserCommand>();
             var ct = new CancellationToken();
 
             // Act...
-            await sut.Handle(addUserCommand, ct);
+            var addedUserId = await sut.Handle(addUserCommand, ct);
 
             // Assert...
             inMemoryContext.Users.Count().Should().Be(1);
@@ -45,10 +47,10 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task DeleteUserHandler_Should_Delete_User()
         {
             // Arrange...
-            var mockUnitOfWork = GetMockUnitOfWork(out var inMemoryContext);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
             var user = _fixture.Create<User>();
             InMemoryContextHelper.AddUserToContext(inMemoryContext, user);
-            var sut = new DeleteUserCommandHandler(mockUnitOfWork);
+            var sut = new DeleteUserCommandHandler(unitOfWork);
             var deleteUserCommand = new DeleteUserCommand
             {
                 Id = user.Id
@@ -66,10 +68,10 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task UpdateUserHandler_Should_Update_User()
         {
             // Arrange...
-            var mockUnitOfWork = GetMockUnitOfWork(out var inMemoryContext);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
             var user = _fixture.Create<User>();
             InMemoryContextHelper.AddUserToContext(inMemoryContext, user);
-            var sut = new UpdateUserCommandHandler(mockUnitOfWork);
+            var sut = new UpdateUserCommandHandler(unitOfWork);
             var updateUserCommand = new UpdateUserCommand
             {
                 Id = user.Id,
@@ -93,7 +95,17 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
 
         #region Helper Methods
 
-        private IUnitOfWork GetMockUnitOfWork(out DataContext inMemoryContext)
+        private IMapper GetMapper()
+        {
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<Application.Profiles.AddUserCommandToUser>();
+            });
+            var mapper = configuration.CreateMapper();
+            return mapper;
+        }
+
+        private IUnitOfWork GetUnitOfWork(out DataContext inMemoryContext)
         {
             inMemoryContext = InMemoryContextHelper.Create();
             var userRepository = new UserRepository(inMemoryContext);

@@ -27,10 +27,10 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
         #region Constructors
 
-        public UsersController(IMediator mediator) //, IMapper mapper)
+        public UsersController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
-            //_mapper = mapper;
+            _mapper = mapper;
         }
 
         #endregion Constructors
@@ -40,7 +40,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// <summary>
         /// Get a page of users
         /// </summary>
-        /// <param name="request">
+        /// <param name="getUsersRequest">
         /// A GetUsersRequest object which contains fields for paging, searching, filtering, sorting and shaping user data</param>
         /// <returns>A page of users</returns>
         /// <response code="200">Success - OK - Returns the requested page of users</response>
@@ -51,21 +51,21 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromBody] API.Models.v1.Request.GetUsersRequest request)
+        public async Task<IActionResult> Get([FromQuery] API.Models.v1.Request.GetUsersRequest getUsersRequest)
         {
-            if (request == null) return BadRequest();
+            if (getUsersRequest == null) return BadRequest();
 
-            var users = await GetUsers(request);
+            var userResponses = await GetUserResponses(getUsersRequest);
 
-            if (users == null || !users.Any()) return NoContent();
+            if (userResponses == null || !userResponses.Any()) return NoContent();
 
-            return Ok(users);
+            return Ok(userResponses);
         }
 
         /// <summary>
         /// Get a user
         /// </summary>
-        /// <param name="id">The unique identifier of the user</param>
+        /// <param name="getUserRequest">The unique identifier of the user</param>
         /// <returns>The requested user</returns>
         /// <response code="200">Success - OK - Returns the requested user</response>
         /// <response code="204">Success - No Content - No user matched the given identifier</response>
@@ -75,15 +75,15 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromRoute] API.Models.v1.Request.GetUserRequest request)
+        public async Task<IActionResult> Get([FromRoute] API.Models.v1.Request.GetUserRequest getUserRequest)
         {
-            if (request == null) return BadRequest();
+            if (getUserRequest == null) return BadRequest();
 
-            var user = await GetUser(request);
+            var getUserResponse = await GetUserResponse(getUserRequest);
 
-            if (user == null) return NoContent();
+            if (getUserResponse == null) return NoContent();
 
-            return Ok(user);
+            return Ok(getUserResponse);
         }
 
         #endregion GET
@@ -105,9 +105,9 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (request == null) return BadRequest();
 
-            var user = await AddUser(request);
+            var response = await AddUser(request);
 
-            return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+            return CreatedAtRoute("GetUser", new { id = response.Id }, response);
         }
 
         #endregion POST
@@ -216,8 +216,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            // ToDo --> Use AutoMapper!
-            var addUserCommand = new AddUserCommand();
+            var addUserCommand = _mapper.Map<AddUserCommand>(request);
 
             var addedUserId = await _mediator.Send(addUserCommand);
 
@@ -236,23 +235,21 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return;
         }
 
-        private async Task<API.Models.v1.Response.UserResponse> GetUser(API.Models.v1.Request.GetUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse?> GetUserResponse(API.Models.v1.Request.GetUserRequest getUserRequest)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (getUserRequest == null) throw new ArgumentNullException(nameof(getUserRequest));
 
-            // ToDo --> Use AutoMapper!
-            var query = new GetUserQuery();
+            var getUserQuery = _mapper.Map<GetUserQuery>(getUserRequest);
 
-            var user = await _mediator.Send(query);
+            var user = await _mediator.Send(getUserQuery);
             if (user == null) return null;
 
-            // ToDo --> Use AutoMapper!
-            var userResponse = new UserResponse();
+            var userResponse = _mapper.Map<UserResponse>(user);
 
             return userResponse;
         }
 
-        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUsers(API.Models.v1.Request.GetUsersRequest request)
+        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(API.Models.v1.Request.GetUsersRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
