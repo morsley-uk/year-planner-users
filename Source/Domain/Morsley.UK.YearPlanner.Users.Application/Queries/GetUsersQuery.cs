@@ -6,6 +6,11 @@ namespace Morsley.UK.YearPlanner.Users.Application.Queries
 {
     public sealed class GetUsersQuery : IRequest<IPagedList<User>>
     {
+        public int PageNumber { get; set; }
+
+        public int PageSize { get; set; }
+
+        public string SearchQuery { get; set; }
 
     }
 }

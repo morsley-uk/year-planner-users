@@ -6,7 +6,8 @@ namespace Morsley.UK.YearPlanner.Users.Application.Profiles
     {
         public AddUserCommandToUser()
         {
-            CreateMap<Application.Commands.AddUserCommand, Domain.Models.User>();
+            CreateMap<Application.Commands.AddUserCommand,
+                      Domain.Models.User>();
         }
     }
 }

@@ -29,10 +29,10 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task GetUserHandler_Should_Get_User()
         {
             // Arrange...
-            var mockUnitOfWork = GetUnitOfWork(out var inMemoryContext);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
             var user = _fixture.Create<User>();
             InMemoryContextHelper.AddUserToContext(inMemoryContext, user);
-            var sut = new GetUserQueryHandler(mockUnitOfWork);
+            var sut = new GetUserQueryHandler(unitOfWork);
             var getUserQuery = new GetUserQuery
             {
                 Id = user.Id
@@ -50,10 +50,10 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task GetUsersHandler_Should_Get_Users()
         {
             // Arrange...
-            var mockUnitOfWork = GetUnitOfWork(out var inMemoryContext);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
             InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 5);
-            //var mapper = GetMapper();
-            var sut = new GetUsersQueryHandler(mockUnitOfWork); //, mapper);
+            var mapper = GetMapper();
+            var sut = new GetUsersQueryHandler(unitOfWork, mapper);
             var getUsersQuery = new GetUsersQuery();
             var ct = new CancellationToken();
 

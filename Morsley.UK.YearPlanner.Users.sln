@@ -69,6 +69,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.User
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.Application.UnitTests", "Tests\UnitTests\Morsley.UK.YearPlanner.Application.UnitTests\Morsley.UK.YearPlanner.Application.UnitTests.csproj", "{DE58E625-2C55-45D1-A4D0-7E240093B981}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Morsley.UK.YearPlanner.Users.API.IntegrationTests", "Tests\IntegrationTests\Morsley.UK.YearPlanner.Users.API.IntegrationTests\Morsley.UK.YearPlanner.Users.API.IntegrationTests.csproj", "{0F08F486-5F4C-4090-B20C-C38CA61489C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,10 @@ Global
 		{DE58E625-2C55-45D1-A4D0-7E240093B981}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE58E625-2C55-45D1-A4D0-7E240093B981}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE58E625-2C55-45D1-A4D0-7E240093B981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F08F486-5F4C-4090-B20C-C38CA61489C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F08F486-5F4C-4090-B20C-C38CA61489C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F08F486-5F4C-4090-B20C-C38CA61489C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F08F486-5F4C-4090-B20C-C38CA61489C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,6 +159,7 @@ Global
 		{95301D28-7285-41C4-9CA0-67C8893A343C} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 		{A177EB28-C816-4725-B73F-86F660AC1181} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 		{DE58E625-2C55-45D1-A4D0-7E240093B981} = {33B46F13-7522-4375-9641-BABD521ABC42}
+		{0F08F486-5F4C-4090-B20C-C38CA61489C0} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A59CD7FB-A695-4D5C-B7EF-4734AB93DB9C}

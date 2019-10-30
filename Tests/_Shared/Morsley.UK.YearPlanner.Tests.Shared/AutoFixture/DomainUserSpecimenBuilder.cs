@@ -23,14 +23,17 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture
             var firstName = nameof(User.FirstName) + "___" + context.Create<string>();
             var lastName = nameof(User.LastName) + "___" + context.Create<string>();
 
-            var user = new Domain.Models.User(firstName, lastName);
+            var user = new Domain.Models.User(firstName, lastName)
+            {
+                Id = Guid.NewGuid(),
+                Title = context.Create<Title>(),
+                Sex = context.Create<Sex>(),
+                Created = DateTime.MinValue//,
+                //Updated = null,
+                //Deleted = null
+            };
 
-            user.Title = context.Create<Title>();
-            user.Sex = context.Create<Sex>();
 
-            user.Created = DateTime.MinValue;
-            user.Updated = null;
-            user.Deleted = null;
 
             return user;
         }

@@ -48,7 +48,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         [HttpGet]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get([FromQuery] API.Models.v1.Request.GetUsersRequest getUsersRequest)
@@ -72,7 +72,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         [HttpGet("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get([FromRoute] API.Models.v1.Request.GetUserRequest getUserRequest)
@@ -98,8 +98,9 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// <response code="201">Success - Created - The user was successfully created</response>
         /// <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response> 
         [HttpPost]
+        [MapToApiVersion("1.0")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Add([FromBody] API.Models.v1.Request.CreateUserRequest request)
         {
@@ -107,7 +108,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
             var response = await AddUser(request);
 
-            return CreatedAtRoute("GetUser", new { id = response.Id }, response);
+            return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
         }
 
         #endregion POST
@@ -249,17 +250,15 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return userResponse;
         }
 
-        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(API.Models.v1.Request.GetUsersRequest request)
+        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(API.Models.v1.Request.GetUsersRequest getUsersRequest)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (getUsersRequest == null) throw new ArgumentNullException(nameof(getUsersRequest));
 
-            // ToDo --> Use AutoMapper!
-            var query = new GetUsersQuery();
+            var query = _mapper.Map<GetUsersQuery>(getUsersRequest);
 
             var pageOfUsers = await _mediator.Send(query);
 
-            // ToDo --> Use AutoMapper!
-            var pageOfUserResponses = API.Models.v1.PagedList.Create(pageOfUsers);
+            var pageOfUserResponses = _mapper.Map<API.Models.v1.PagedList<UserResponse>>(pageOfUsers);
 
             return pageOfUserResponses;
         }

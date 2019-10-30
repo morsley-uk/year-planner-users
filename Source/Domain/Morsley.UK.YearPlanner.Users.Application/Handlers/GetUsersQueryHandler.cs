@@ -1,4 +1,4 @@
-﻿//using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Morsley.UK.YearPlanner.Users.Application.Models;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
@@ -12,29 +12,19 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
     public sealed class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, IPagedList<User>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public GetUsersQueryHandler(IUnitOfWork unitOfWork) //, IMapper mapper)
+        public GetUsersQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            //_mapper = mapper;
+            _mapper = mapper;
         }
 
         public async Task<IPagedList<User>> Handle(GetUsersQuery query, CancellationToken ct)
         {
-            var getOptions = GetOptionsFromQuery(query);
+            var getOptions = _mapper.Map<GetOptions>(query);
             var pageOfUsers = await _unitOfWork.UserRepository.Get(getOptions);
             return pageOfUsers;
-        }
-
-        private GetOptions GetOptionsFromQuery(GetUsersQuery query)
-        {
-            // ToDo --> Use AutoMapper!
-            var getOptions = new GetOptions();
-
-
-
-            return getOptions;
         }
     }
 }

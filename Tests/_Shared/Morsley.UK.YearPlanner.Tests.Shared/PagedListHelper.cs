@@ -9,7 +9,7 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared
     {
         public static async Task<IPagedList<T>> Create(IQueryable<T> entities, int pageNumber, int pageSize)
         {
-            var pagedList = await PagedList<T>.Create(entities, pageNumber, pageSize);
+            var pagedList = await PagedList<T>.CreateAsync(entities, pageNumber, pageSize);
             return pagedList;
         }
     }

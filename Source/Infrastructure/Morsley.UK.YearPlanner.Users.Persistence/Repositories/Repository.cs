@@ -37,7 +37,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Repositories
 
             var entities = GetAll(options);
 
-            return await PagedList<TEntity>.Create(entities, options.PageNumber, options.PageSize);
+            return await PagedList<TEntity>.CreateAsync(entities, options.PageNumber, options.PageSize);
         }
 
         protected virtual IQueryable<TEntity> Search(IQueryable<TEntity> entities, IGetOptions options)

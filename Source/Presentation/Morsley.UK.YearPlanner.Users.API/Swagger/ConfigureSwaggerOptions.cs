@@ -3,9 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.IO;
-using System.Reflection;
 
 namespace Morsley.UK.YearPlanner.Users.API.Swagger
 {
@@ -27,9 +24,9 @@ namespace Morsley.UK.YearPlanner.Users.API.Swagger
             foreach (ApiVersionDescription description in _provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
-                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-                options.IncludeXmlComments(xmlCommentsFullPath);
+                //var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                //var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
+                //options.IncludeXmlComments(xmlCommentsFullPath);
             }
         }
 
