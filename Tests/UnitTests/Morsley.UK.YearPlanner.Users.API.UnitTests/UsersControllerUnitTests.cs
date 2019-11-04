@@ -34,7 +34,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             var mockMediator = Substitute.For<IMediator>();
             var mockMapper = Substitute.For<IMapper>();
             var sut = new UsersController(mockMediator, mockMapper);
-            var userId = _fixture.Create<Guid>();
+            var userId = Guid.Empty;
 
             // Act...
             var result = await sut.Delete(userId);
