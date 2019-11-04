@@ -4,8 +4,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
-using System.IO;
-using System.Reflection;
 
 namespace Morsley.UK.YearPlanner.Users.API.Swagger
 {
@@ -18,23 +16,24 @@ namespace Morsley.UK.YearPlanner.Users.API.Swagger
             IApiVersionDescriptionProvider provider,
             IOptions<OpenApiInfo> options)
         {
-            _provider = provider;
-            _openApiInfo = options.Value;
+            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            _openApiInfo = options.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
         public void Configure(SwaggerGenOptions options)
         {
+            if (options == null) throw new ArgumentNullException(nameof(options));
+
             foreach (ApiVersionDescription description in _provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
-                var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-                options.IncludeXmlComments(xmlCommentsFullPath);
             }
         }
 
         private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
         {
+            if (description == null) throw new ArgumentNullException(nameof(description));
+
             var info = new OpenApiInfo
             {
                 Title = string.Format(_openApiInfo.Title, description.ApiVersion.ToString()),

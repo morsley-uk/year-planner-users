@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,13 +7,18 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.OpenApi.Models;
 using Morsley.UK.YearPlanner.Users.API.Swagger;
 using Morsley.UK.YearPlanner.Users.Application.IoC;
 using Morsley.UK.YearPlanner.Users.Infrastructure.IoC;
 using Morsley.UK.YearPlanner.Users.Persistence.IoC;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Morsley.UK.YearPlanner.Users.API
 {
@@ -22,39 +28,23 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         public StartUp(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         // Dependency Injection...
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            AddControllers(services);
 
             AddApiVersioning(services);
 
-            services.AddApplication();
+            AddAutoMapper(services);
+
+            AddApplication(services);
 
             AddInfrastructure(services);
 
             AddPersistence(services);
-        }
-
-        private void AddInfrastructure(IServiceCollection services)
-        {
-            services.AddInfrastructure();
-        }
-
-        private static void AddPersistence(IServiceCollection services)
-        {
-            var settings = Shared.Environment.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
-
-            if (string.IsNullOrEmpty(settings))
-            {
-                Log.Fatal("Could not determine Persistence Key! :-(");
-                return;
-            }
-
-            services.AddPersistence(settings);
         }
 
         // Pipeline...
@@ -71,8 +61,6 @@ namespace Morsley.UK.YearPlanner.Users.API
             applicationBuilder.UseHttpsRedirection();
 
             applicationBuilder.UseRouting();
-
-            applicationBuilder.UseAuthorization();
 
             applicationBuilder.UseEndpoints(endpoints =>
             {
@@ -93,6 +81,7 @@ namespace Morsley.UK.YearPlanner.Users.API
             services.AddSwaggerGen(options =>
             {
                 options.OperationFilter<SwaggerDefaultValues>();
+                options.IncludeXmlComments(XmlCommentsFilePath);
             });
 
             services.AddApiVersioning(options =>
@@ -107,11 +96,46 @@ namespace Morsley.UK.YearPlanner.Users.API
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
+        }
 
-            services.ConfigureSwaggerGen(options =>
+        private static void AddApplication(IServiceCollection services)
+        {
+            services.AddApplication();
+        }
+
+        private static void AddAutoMapper(IServiceCollection services)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            services.AddAutoMapper(assemblies);
+        }
+
+        private static void AddControllers(IServiceCollection services)
+        {
+            services.AddControllers()
+                    .AddNewtonsoftJson(setupAction =>
+                    {
+                        setupAction.SerializerSettings
+                                   .ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    })
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+        }
+
+        private void AddInfrastructure(IServiceCollection services)
+        {
+            services.AddInfrastructure();
+        }
+
+        private static void AddPersistence(IServiceCollection services)
+        {
+            var settings = Shared.Environment.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+
+            if (string.IsNullOrEmpty(settings))
             {
-                options.CustomSchemaIds(x => x.FullName);
-            });
+                Log.Fatal("Could not determine Persistence Key! :-(");
+                return;
+            }
+
+            services.AddPersistence(settings);
         }
 
         private void ConfigureApiVersioning(
@@ -122,16 +146,26 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             applicationBuilder.UseSwaggerUI(options =>
             {
-                options.DefaultModelExpandDepth(0);
-                options.DefaultModelsExpandDepth(0);
+                // Build a Swagger endpoint for each discovered API version...
                 foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
                 {
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                 }
+
                 options.RoutePrefix = "";
             });
         }
 
+        static string XmlCommentsFilePath
+        {
+            get
+            {
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var fileName = typeof(StartUp).GetTypeInfo().Assembly.GetName().Name + ".xml";
+                return Path.Combine(basePath, fileName);
+            }
+        }
+        
         #endregion Private Methods
     }
 }

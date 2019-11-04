@@ -25,6 +25,30 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Repositories
             Context.Set<TEntity>().Add(entity);
         }
 
+        public void Delete(TEntity entity)
+        {
+            Context.Set<TEntity>().Remove(entity);
+        }
+
+        public void Delete(Guid id)
+        {
+            var entityToDelete = Context.Set<TEntity>().FirstOrDefault(e => e.Id == id);
+            if (entityToDelete != null)
+            {
+                Context.Set<TEntity>().Remove(entityToDelete);
+            }
+        }
+
+        protected virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, IGetOptions options)
+        {
+            return entities;
+        }
+
+        public IEnumerable<TEntity> Find(Func<TEntity, bool> predicate)
+        {
+            return Context.Set<TEntity>().Where(predicate).ToList();
+        }
+
         public async Task<TEntity> Get(Guid id)
         {
             return await Context.Set<TEntity>()
@@ -37,7 +61,18 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Repositories
 
             var entities = GetAll(options);
 
-            return await PagedList<TEntity>.Create(entities, options.PageNumber, options.PageSize);
+            return await PagedList<TEntity>.CreateAsync(entities, options.PageNumber, options.PageSize);
+        }
+
+        protected virtual IQueryable<TEntity> GetAll(IGetOptions options)
+        {
+            var entities = Context.Set<TEntity>().AsQueryable();
+
+            entities = Sort(entities, options);
+            entities = Filter(entities, options);
+            entities = Search(entities, options);
+
+            return entities;
         }
 
         protected virtual IQueryable<TEntity> Search(IQueryable<TEntity> entities, IGetOptions options)
@@ -74,39 +109,12 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Repositories
             return string.Join(",", orderBys);
         }
 
-        protected virtual IQueryable<TEntity> GetAll(IGetOptions options)
+        public void Update(TEntity entity)
         {
-            var entities = Context.Set<TEntity>().AsQueryable();
-
-            entities = Sort(entities, options);
-            entities = Filter(entities, options);
-            entities = Search(entities, options);
-
-            return entities;
-        }
-
-        protected virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, IGetOptions options)
-        {
-            return entities;
-        }
-
-        public IEnumerable<TEntity> Find(Func<TEntity, bool> predicate)
-        {
-            return Context.Set<TEntity>().Where(predicate).ToList();
-        }
-
-        public void Delete(TEntity entity)
-        {
-            Context.Set<TEntity>().Remove(entity);
-        }
-
-        public void Delete(Guid id)
-        {
-            var entityToDelete = Context.Set<TEntity>().FirstOrDefault(e => e.Id == id);
-            if (entityToDelete != null)
-            {
-                Context.Set<TEntity>().Remove(entityToDelete);
-            }
+            // NoOp
+            // Although this method is not used in this implementation, it is included here
+            // for completeness, and maybe required going forward and/or with another
+            // implementation of a persistence related repository.
         }
     }
 }

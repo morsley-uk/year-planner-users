@@ -13,11 +13,11 @@ namespace Morsley.UK.YearPlanner.Users.Persistence
 
         public UnitOfWork(
             DataContext context,
-            IDateTimeService _dateTimeService,
+            IDateTimeService dateTimeService,
             IUserRepository userRepository)
         {
             Context = context;
-            DateTimeService = _dateTimeService;
+            DateTimeService = dateTimeService;
             UserRepository = userRepository;
         }
 
@@ -46,7 +46,15 @@ namespace Morsley.UK.YearPlanner.Users.Persistence
 
         public void Dispose()
         {
-            Context.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposing) return;
+
+            Context?.Dispose();
         }
     }
 }

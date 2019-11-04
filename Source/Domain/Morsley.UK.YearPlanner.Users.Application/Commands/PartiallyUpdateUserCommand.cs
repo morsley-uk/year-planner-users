@@ -5,7 +5,7 @@ using System;
 
 namespace Morsley.UK.YearPlanner.Users.Application.Commands
 {
-    public sealed class PartialUpdateUserCommand : IRequest<User>
+    public sealed class PartiallyUpdateUserCommand : IRequest<User>
     {
         public Guid Id { get; set; }
 
@@ -16,5 +16,13 @@ namespace Morsley.UK.YearPlanner.Users.Application.Commands
         public string? LastName { get; set; }
 
         public Sex? Sex { get; set; }
+
+        public bool TitleChanged { get; set; }
+
+        public bool FirstNameChanged { get; set; }
+
+        public bool LastNameChanged { get; set; }
+
+        public bool SexChanged { get; set; }
     }
 }

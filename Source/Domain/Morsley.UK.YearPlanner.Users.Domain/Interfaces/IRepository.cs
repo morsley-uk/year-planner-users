@@ -8,14 +8,16 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Interfaces
     {
         void Create(TEntity entity);
 
+        void Delete(TEntity entity);
+
+        void Delete(Guid id);
+
+        IEnumerable<TEntity> Find(Func<TEntity, bool> predicate);
+
         Task<TEntity> Get(Guid id);
 
         Task<IPagedList<TEntity>> Get(IGetOptions options);
 
-        IEnumerable<TEntity> Find(Func<TEntity, bool> predicate);
-
-        void Delete(TEntity entity);
-
-        void Delete(Guid id);
+        void Update(TEntity entity);
     }
 }

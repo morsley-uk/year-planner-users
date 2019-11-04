@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentAssertions;
 using Morsley.UK.YearPlanner.Users.Application.Handlers;
+using Morsley.UK.YearPlanner.Users.Application.Profiles;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
 using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
@@ -29,10 +30,10 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task GetUserHandler_Should_Get_User()
         {
             // Arrange...
-            var mockUnitOfWork = GetUnitOfWork(out var inMemoryContext);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
             var user = _fixture.Create<User>();
             InMemoryContextHelper.AddUserToContext(inMemoryContext, user);
-            var sut = new GetUserQueryHandler(mockUnitOfWork);
+            var sut = new GetUserQueryHandler(unitOfWork);
             var getUserQuery = new GetUserQuery
             {
                 Id = user.Id
@@ -50,11 +51,15 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         public async Task GetUsersHandler_Should_Get_Users()
         {
             // Arrange...
-            var mockUnitOfWork = GetUnitOfWork(out var inMemoryContext);
+            var unitOfWork = GetUnitOfWork(out var inMemoryContext);
             InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 5);
-            //var mapper = GetMapper();
-            var sut = new GetUsersQueryHandler(mockUnitOfWork); //, mapper);
-            var getUsersQuery = new GetUsersQuery();
+            var mapper = GetMapper();
+            var sut = new GetUsersQueryHandler(unitOfWork, mapper);
+            var getUsersQuery = new GetUsersQuery
+            {
+                PageNumber = 1,
+                PageSize = 10
+            };
             var ct = new CancellationToken();
 
             // Act...
@@ -70,7 +75,7 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         {
             var mapperConfiguration = new MapperConfiguration(configure =>
             {
-
+                configure.AddProfile<GetUsersQueryToGetOptions>();
             });
             return mapperConfiguration.CreateMapper();
         }

@@ -62,15 +62,37 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
 
             // Act...
             var update = await sut.UserRepository.Get(userId);
+            var newTitle = GetDifferentValue(update.Title);
+            update.Title = newTitle;
             var newFirstName = _fixture.Create<string>();
             update.FirstName = newFirstName;
+            var newLastName = _fixture.Create<string>();
+            update.LastName = newLastName;
+            var newSex = GetDifferentValue(update.Sex);
+            update.Sex = newSex;
             await sut.CompleteAsync();
 
             // Assert...
             update.Updated.Should().NotBeNull();
             update.Updated.Should().Be(dt);
+            update.Title.Should().Be(newTitle);
             update.FirstName.Should().Be(newFirstName);
+            update.LastName.Should().Be(newLastName);
+            update.Sex.Should().Be(newSex);
+
             sut.Dispose();
+        }
+
+        private T GetDifferentValue<T>(T oldValue)
+        {
+            T newValue;
+
+            do
+            {
+                newValue = _fixture.Create<T>();
+            } while (newValue.Equals(oldValue));
+
+            return newValue;
         }
 
         [Fact]
@@ -114,9 +136,5 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             // Assert...
             numberOfRowsAffected.Should().Be(1);
         }
-
-        #region Helper Methods
-
-        #endregion Helper Methods
     }
 }

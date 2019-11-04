@@ -2,6 +2,7 @@
 using Morsley.UK.YearPlanner.Users.Application.Queries;
 using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,6 +19,8 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
 
         public async Task<User> Handle(GetUserQuery query, CancellationToken ct)
         {
+            if (query == null) throw new ArgumentNullException(nameof(query));
+
             var user = await _unitOfWork.UserRepository.Get(query.Id);
             return user;
         }

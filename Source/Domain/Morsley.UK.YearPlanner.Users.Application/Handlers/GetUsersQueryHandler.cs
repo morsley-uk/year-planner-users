@@ -4,6 +4,7 @@ using Morsley.UK.YearPlanner.Users.Application.Models;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
 using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,27 +15,19 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetUsersQueryHandler(IUnitOfWork unitOfWork) //, IMapper mapper)
+        public GetUsersQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
-            //_mapper = mapper;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<IPagedList<User>> Handle(GetUsersQuery query, CancellationToken ct)
         {
-            var getOptions = GetOptionsFromQuery(query);
+            if (query == null) throw new ArgumentNullException(nameof(query));
+
+            var getOptions = _mapper.Map<GetOptions>(query);
             var pageOfUsers = await _unitOfWork.UserRepository.Get(getOptions);
             return pageOfUsers;
-        }
-
-        private GetOptions GetOptionsFromQuery(GetUsersQuery query)
-        {
-            // ToDo --> Use AutoMapper!
-            var getOptions = new GetOptions();
-
-
-
-            return getOptions;
         }
     }
 }

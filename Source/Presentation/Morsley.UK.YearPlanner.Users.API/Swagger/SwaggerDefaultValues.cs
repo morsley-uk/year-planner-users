@@ -1,21 +1,24 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Linq;
 
 namespace Morsley.UK.YearPlanner.Users.API.Swagger
 {
     public class SwaggerDefaultValues : IOperationFilter
     {
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        public void Apply(
+            OpenApiOperation operation, 
+            OperationFilterContext context)
         {
-            var apiDescription = context.ApiDescription;
-            var apiVersion = apiDescription.GetApiVersion();
-            var model = apiDescription.ActionDescriptor.GetApiVersionModel(ApiVersionMapping.Explicit | ApiVersionMapping.Implicit);
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            if (context == null) throw new ArgumentNullException(nameof(context));
 
-            operation.Deprecated = model.DeprecatedApiVersions.Contains(apiVersion);
+            var apiDescription = context.ApiDescription;
+
+            operation.Deprecated |= apiDescription.IsDeprecated();
 
             if (operation.Parameters == null) return;
 
@@ -28,6 +31,10 @@ namespace Morsley.UK.YearPlanner.Users.API.Swagger
                     parameter.Description = description.ModelMetadata?.Description;
                 }
 
+                if (parameter.Schema.Default == null && description.DefaultValue != null)
+                {
+                    parameter.Schema.Default = new OpenApiString(description.DefaultValue.ToString());
+                }
                 parameter.Required |= description.IsRequired;
             }
         }
