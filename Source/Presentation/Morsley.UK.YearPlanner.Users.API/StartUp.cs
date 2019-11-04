@@ -86,8 +86,8 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             services.AddApiVersioning(options =>
             {
-                //options.AssumeDefaultVersionWhenUnspecified = true;
-                //options.DefaultApiVersion = ApiVersion.Default;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = ApiVersion.Default;
                 options.ReportApiVersions = true;
             });
 
@@ -96,11 +96,6 @@ namespace Morsley.UK.YearPlanner.Users.API
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-
-            //services.ConfigureSwaggerGen(options =>
-            //{
-            //    options.CustomSchemaIds(x => x.FullName);
-            //});
         }
 
         private static void AddApplication(IServiceCollection services)
@@ -151,9 +146,6 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             applicationBuilder.UseSwaggerUI(options =>
             {
-                //options.DefaultModelExpandDepth(0);
-                //options.DefaultModelsExpandDepth(0);
-
                 // Build a Swagger endpoint for each discovered API version...
                 foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
                 {
