@@ -85,7 +85,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 configure.AddProfile<DeleteUserRequestToDeleteUserCommand>();
             });
             var sut = configuration.CreateMapper();
-            var deleteUserRequest = _fixture.Create<GetUserRequest>();
+            var deleteUserRequest = _fixture.Create<DeleteUserRequest>();
 
             // Act...
             var deleteUserCommand = sut.Map<DeleteUserCommand>(deleteUserRequest);
