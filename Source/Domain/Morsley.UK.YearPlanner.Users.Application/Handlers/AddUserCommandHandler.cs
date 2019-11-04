@@ -15,8 +15,8 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
 
         public AddUserCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<Guid> Handle(AddUserCommand command, CancellationToken ct)
