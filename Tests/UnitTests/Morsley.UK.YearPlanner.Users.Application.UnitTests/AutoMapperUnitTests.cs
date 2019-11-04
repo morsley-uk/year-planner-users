@@ -8,7 +8,7 @@ using Morsley.UK.YearPlanner.Users.Application.Queries;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
 using Xunit;
 
-namespace Morsley.UK.YearPlanner.Application.UnitTests
+namespace Morsley.UK.YearPlanner.Users.Application.UnitTests
 {
     public class AutoMapperUnitTests
     {
@@ -17,10 +17,6 @@ namespace Morsley.UK.YearPlanner.Application.UnitTests
         public AutoMapperUnitTests()
         {
             _fixture = new Fixture();
-            //_fixture.Customizations.Insert(0, new EnumSpecimenBuilder<Title>());
-            //_fixture.Customizations.Insert(1, new EnumSpecimenBuilder<Sex>());
-            //_fixture.Customizations.Add(new CreateUserRequestSpecimenBuilder());
-            //_fixture.Customizations.Add(new DomainUserSpecimenBuilder());
         }
 
         [Fact]
@@ -86,7 +82,6 @@ namespace Morsley.UK.YearPlanner.Application.UnitTests
         }
 
         [Fact]
-
         public void GetUsersQuery_To_GetOptions_With_Default_Values()
         {
             // Arrange...

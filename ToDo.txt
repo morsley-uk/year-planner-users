@@ -1,0 +1,11 @@
+API Tests
+=========
+
+PATCH
+
+1. replace
+2. add --> Address/Phone/Email?
+3. copy
+4. remove
+5. move
+6. test

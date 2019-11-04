@@ -1,17 +1,16 @@
 using AutoFixture;
 using FluentAssertions;
+using Morsley.UK.YearPlanner.Users.Application.Models;
 using Morsley.UK.YearPlanner.Users.Domain.Enumerations;
-using Morsley.UK.YearPlanner.Users.Persistence.Models;
 using Morsley.UK.YearPlanner.Users.Persistence.Repositories;
 using Morsley.UK.YearPlanner.Users.Tests.Shared;
 using Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Morsley.UK.YearPlanner.Users.Application.Models;
 using Xunit;
 
-namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
+namespace Morsley.UK.YearPlanner.Users.Persistence.UnitTests
 {
     public class UserRepositoryUnitTests
     {
@@ -234,7 +233,6 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
             // Assert...
             pageOfUsers.Should().NotBeNull();
             pageOfUsers.Count.Should().Be(0);
-
         }
 
         [Fact]
@@ -275,7 +273,6 @@ namespace Morsley.UK.YearPlanner.Users.Repository.UnitTests
             pageOfUsers.Should().NotBeNull();
             pageOfUsers.Count.Should().Be(0);
             pageOfUsers.TotalCount.Should().Be(0);
-
         }
 
         [Fact]

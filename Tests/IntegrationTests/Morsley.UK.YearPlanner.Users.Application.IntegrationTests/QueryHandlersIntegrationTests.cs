@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentAssertions;
 using Morsley.UK.YearPlanner.Users.Application.Handlers;
+using Morsley.UK.YearPlanner.Users.Application.Profiles;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
 using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Domain.Models;
@@ -54,7 +55,11 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
             InMemoryContextHelper.AddUsersToContext(_fixture, inMemoryContext, 5);
             var mapper = GetMapper();
             var sut = new GetUsersQueryHandler(unitOfWork, mapper);
-            var getUsersQuery = new GetUsersQuery();
+            var getUsersQuery = new GetUsersQuery
+            {
+                PageNumber = 1,
+                PageSize = 10
+            };
             var ct = new CancellationToken();
 
             // Act...
@@ -70,7 +75,7 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
         {
             var mapperConfiguration = new MapperConfiguration(configure =>
             {
-
+                configure.AddProfile<GetUsersQueryToGetOptions>();
             });
             return mapperConfiguration.CreateMapper();
         }

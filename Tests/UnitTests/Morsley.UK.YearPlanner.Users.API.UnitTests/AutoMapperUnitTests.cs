@@ -77,7 +77,43 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
         }
 
         [Fact]
-        public void GetUsersRequest_To_GetUserQuery()
+        public void DeleteUserRequest_To_DeleteUserCommand()
+        {
+            // Arrange...
+            var configuration = new MapperConfiguration(configure =>
+            {
+                configure.AddProfile<DeleteUserRequestToDeleteUserCommand>();
+            });
+            var sut = configuration.CreateMapper();
+            var deleteUserRequest = _fixture.Create<GetUserRequest>();
+
+            // Act...
+            var deleteUserCommand = sut.Map<DeleteUserCommand>(deleteUserRequest);
+
+            // Assert...
+            deleteUserCommand.Should().BeEquivalentTo(deleteUserRequest);
+        }
+
+        [Fact]
+        public void GetUserRequest_To_GetUserQuery()
+        {
+            // Arrange...
+            var configuration = new MapperConfiguration(configure =>
+            {
+                configure.AddProfile<GetUserRequestToGetUserQuery>();
+            });
+            var sut = configuration.CreateMapper();
+            var getUserRequest = _fixture.Create<GetUserRequest>();
+
+            // Act...
+            var getUserQuery = sut.Map<GetUserQuery>(getUserRequest);
+
+            // Assert...
+            getUserQuery.Should().BeEquivalentTo(getUserRequest);
+        }
+
+        [Fact]
+        public void GetUsersRequest_To_GetUsersQuery()
         {
             // Arrange...
             var configuration = new MapperConfiguration(configure =>
@@ -92,6 +128,105 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
 
             // Assert...
             getUsersQuery.Should().BeEquivalentTo(getUsersRequest);
+        }
+
+        [Fact]
+        public void PartiallyUpdateUserRequest_To_PartiallyUpdateUserCommand()
+        {
+            // Arrange...
+            var configuration = new MapperConfiguration(configure =>
+            {
+                configure.AddProfile<PartiallyUpdateUserRequestToPartiallyUpdateUserCommand>();
+            });
+            var sut = configuration.CreateMapper();
+            var userId = _fixture.Create<Guid>();
+            var firstName = _fixture.Create<string>();
+            var partiallyUpdateUserRequest = new PartiallyUpdateUserRequest(userId)
+            {
+                FirstName = firstName
+            };
+
+            // Act...
+            var partiallyUpdateUserCommand = sut.Map<PartiallyUpdateUserCommand>(partiallyUpdateUserRequest);
+
+            // Assert...
+            partiallyUpdateUserCommand.Id.Should().Be(userId);
+            partiallyUpdateUserCommand.Title.Should().BeNull();
+            partiallyUpdateUserCommand.FirstName.Should().Be(firstName);
+            partiallyUpdateUserCommand.LastName.Should().BeNull();
+            partiallyUpdateUserCommand.Sex.Should().BeNull();
+        }
+
+        [Fact]
+        public void Persistence_PagedList_To_API_PagedList()
+        {
+            // Arrange...
+            _fixture.RepeatCount = 10;
+            var users = _fixture.Create<List<User>>();
+            var pagedListUsers = Substitute.For<Domain.Interfaces.IPagedList<User>>();
+            pagedListUsers.CurrentPage.Returns(1);
+            pagedListUsers.PageSize.Returns(10);
+            pagedListUsers.HasPrevious.Returns(false);
+            pagedListUsers.HasNext.Returns(true);
+            pagedListUsers.TotalCount.Returns(200);
+            pagedListUsers.TotalPages.Returns(20);
+            pagedListUsers.GetEnumerator().Returns(users.GetEnumerator());
+
+            var configuration = new MapperConfiguration(configure =>
+            {
+                configure.AddProfile<PersistencePagedListToApiPagedList>();
+            });
+            var sut = configuration.CreateMapper();
+
+            // Act...
+            var pagedListUserResponses = sut.Map<API.Models.v1.PagedList<UserResponse>>(pagedListUsers);
+
+            // Assert...
+            pagedListUserResponses.Count.Should().Be(pagedListUsers.PageSize);
+            pagedListUserResponses.CurrentPage.Should().Be(pagedListUsers.CurrentPage);
+            pagedListUserResponses.PageSize.Should().Be(pagedListUsers.PageSize);
+            pagedListUserResponses.HasPrevious.Should().Be(pagedListUsers.HasPrevious);
+            pagedListUserResponses.HasNext.Should().Be(pagedListUsers.HasNext);
+            pagedListUserResponses.TotalCount.Should().Be(pagedListUsers.TotalCount);
+            pagedListUserResponses.TotalPages.Should().Be(pagedListUsers.TotalPages);
+        }
+
+        [Fact]
+        public void UpdateUserRequest_To_UpdateUserCommand()
+        {
+            // Arrange...
+            var configuration = new MapperConfiguration(configure =>
+            {
+                configure.AddProfile<UpdateUserRequestToUpdateUserCommand>();
+            });
+            var sut = configuration.CreateMapper();
+            var updateUserRequest = _fixture.Create<UpdateUserCommand>();
+
+            // Act...
+            var updateUserCommand = sut.Map<UpdateUserCommand>(updateUserRequest);
+
+            // Assert...
+            updateUserCommand.Should().BeEquivalentTo(updateUserRequest);
+        }
+
+        [Fact]
+        public void UpdateUserRequest_To_UpdateUserCommand_With_Nulls()
+        {
+            // Arrange...
+            var configuration = new MapperConfiguration(configure =>
+            {
+                configure.AddProfile<UpdateUserRequestToUpdateUserCommand>();
+            });
+            var sut = configuration.CreateMapper();
+            var updateUserRequest = _fixture.Create<UpdateUserCommand>();
+            updateUserRequest.Title = null;
+            updateUserRequest.Sex = null;
+
+            // Act...
+            var updateUserCommand = sut.Map<UpdateUserCommand>(updateUserRequest);
+
+            // Assert...
+            updateUserCommand.Should().BeEquivalentTo(updateUserRequest);
         }
 
         [Fact]
@@ -136,40 +271,6 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             // Assert...
             userResponse.FirstName.Should().BeEquivalentTo(user.FirstName);
             userResponse.LastName.Should().BeEquivalentTo(user.LastName);
-        }
-
-        [Fact]
-        public void Persistence_PagedList_To_API_PagedList()
-        {
-            // Arrange...
-            _fixture.RepeatCount = 10;
-            var users = _fixture.Create<List<User>>();
-            var pagedListUsers = Substitute.For<Domain.Interfaces.IPagedList<User>>();
-            pagedListUsers.CurrentPage.Returns(1);
-            pagedListUsers.PageSize.Returns(10);
-            pagedListUsers.HasPrevious.Returns(false);
-            pagedListUsers.HasNext.Returns(true);
-            pagedListUsers.TotalCount.Returns(200);
-            pagedListUsers.TotalPages.Returns(20);
-            pagedListUsers.GetEnumerator().Returns(users.GetEnumerator());
-
-            var configuration = new MapperConfiguration(configure =>
-            {
-                configure.AddProfile<PersistencePagedListToApiPagedList>();
-            });
-            var sut = configuration.CreateMapper();
-
-            // Act...
-            var pagedListUserResponses = sut.Map<API.Models.v1.PagedList<UserResponse>>(pagedListUsers);
-
-            // Assert...
-            pagedListUserResponses.Count.Should().Be(pagedListUsers.PageSize);
-            pagedListUserResponses.CurrentPage.Should().Be(pagedListUsers.CurrentPage);
-            pagedListUserResponses.PageSize.Should().Be(pagedListUsers.PageSize);
-            pagedListUserResponses.HasPrevious.Should().Be(pagedListUsers.HasPrevious);
-            pagedListUserResponses.HasNext.Should().Be(pagedListUsers.HasNext);
-            pagedListUserResponses.TotalCount.Should().Be(pagedListUsers.TotalCount);
-            pagedListUserResponses.TotalPages.Should().Be(pagedListUsers.TotalPages);
         }
 
         #region Helper Methods

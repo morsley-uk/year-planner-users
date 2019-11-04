@@ -2,9 +2,20 @@
 {
     public class GetUsersRequest
     {
-        public int? PageNumber { get; set; }
+        private uint _pageNumber = 1;
+        private uint _pageSize = 10;
 
-        public int? PageSize { get; set; }
+        public uint PageNumber
+        {
+            get => _pageNumber;
+            set => _pageNumber = value <= 0 ? 1 : value;
+        }
+
+        public uint PageSize
+        {
+            get => _pageSize;
+            set => _pageSize = value <= 0 ? 1 : value;
+        }
 
         public string? SearchQuery { get; set; }
     }

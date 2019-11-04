@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Morsley.UK.YearPlanner.Users.Persistence.UnitTests
+namespace Morsley.UK.YearPlanner.Users.Application.UnitTests
 {
     public class CommandHandlersUnitTests
     {
@@ -28,16 +28,10 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.UnitTests
             // Arrange...
             Domain.Models.User addedUser = _fixture.Create<Domain.Models.User>();
             var mockUnitOfWork = Substitute.For<IUnitOfWork>();
-            //var expectedUserId = _fixture.Create<Guid>();
-            //mockUnitOfWork.UserRepository.When(x => x.Create(Arg.Any<User>()))
-            //                             .Do(x => x.Arg<User>().Id = expectedUserId);
-            //var expectedUserId = _fixture.Create<Guid>();
-
             mockUnitOfWork.UserRepository.When(x => x.Create(Arg.Any<User>()))
                                          .Do(x => x.Arg<User>().Id = addedUser.Id);
             mockUnitOfWork.CompleteAsync().Returns(1);
             var mockMapper = Substitute.For<IMapper>();
-            //Domain.Models.User addedUser = _fixture.Create<Domain.Models.User>();
             mockMapper.Map<Domain.Models.User>(Arg.Any<Application.Commands.AddUserCommand>()).Returns(addedUser);
 
             var sut = new AddUserCommandHandler(mockUnitOfWork, mockMapper);
@@ -48,7 +42,6 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.UnitTests
             var actualUserId = await sut.Handle(addUserCommand, ct);
 
             // Assert...
-            //actualUserId.Should().Be(expectedUserId);
             actualUserId.Should().Be(addedUser.Id);
             mockUnitOfWork.UserRepository.Received(1).Create(Arg.Any<User>());
             await mockUnitOfWork.Received(1).CompleteAsync();
@@ -71,7 +64,6 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.UnitTests
 
             // Assert...
             action.Should().Throw<ArgumentNullException>();
-
         }
 
         // ToDo --> Test CancellationToken

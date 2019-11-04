@@ -15,11 +15,11 @@
             <response code="204">Success - No Content - No users matched given criteria</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(Morsley.UK.YearPlanner.Users.API.Models.v1.Request.GetUserRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Get(System.Guid)">
             <summary>
             Get a user
             </summary>
-            <param name="getUserRequest">The unique identifier of the user</param>
+            <param name="id">The unique identifier of the user</param>
             <returns>The requested user</returns>
             <response code="200">Success - OK - Returns the requested user</response>
             <response code="204">Success - No Content - No user matched the given identifier</response>
@@ -34,23 +34,26 @@
             <response code="201">Success - Created - The user was successfully created</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response> 
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.v1.Request.UpdateUserRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Upsert(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.v1.Request.UpsertUserRequest)">
             <summary>
-            Fully update a user
+            Upsert a user
             </summary>
             <param name="id">The unique identifier of the user</param>
-            <param name="request">An UpdateUserRequest object which contains all the updates</param>
-            <returns>The updated user</returns>
+            <param name="request">
+            An UpsertUserRequest object which contains all the
+            data required to either update or create a user.
+            </param>
+            <returns>The upserted user</returns>
             <response code="200">Success - OK - The user was successfully updated</response>
+            <response code="201">Success - Created - The user was successfully created</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
-            <response code="404">Error - Not Found - No user matched the given identifier</response>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.v1.Request.PartiallyUpdateUserRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Morsley.UK.YearPlanner.Users.API.Models.v1.Request.PartiallyUpdateUserRequest})">
             <summary>
             Fully or partially update a user
             </summary>
             <param name="id">The unique identifier of the user</param>
-            <param name="patchDocument">
+            <param name="request">
             A JSON Patch Document detailing the full or partial updates to the user
             </param>
             <returns>The updated user</returns>
@@ -70,7 +73,7 @@
             ] \
             </remarks>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Delete(Morsley.UK.YearPlanner.Users.API.Models.v1.Request.DeleteUserRequest)">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Delete(System.Guid)">
             <summary>
             Delete a user
             </summary>

@@ -13,11 +13,11 @@ namespace Morsley.UK.YearPlanner.Users.Persistence
 
         public UnitOfWork(
             DataContext context,
-            IDateTimeService _dateTimeService,
+            IDateTimeService dateTimeService,
             IUserRepository userRepository)
         {
             Context = context;
-            DateTimeService = _dateTimeService;
+            DateTimeService = dateTimeService;
             UserRepository = userRepository;
         }
 

@@ -83,7 +83,7 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
             var ct = new CancellationToken();
 
             // Act...
-            await sut.Handle(updateUserCommand, ct);
+            var updatedUser = await sut.Handle(updateUserCommand, ct);
 
             // Assert...
             inMemoryContext.Users.Count().Should().Be(1);
@@ -100,6 +100,8 @@ namespace Morsley.UK.YearPlanner.Users.Application.IntegrationTests
             var configuration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<Application.Profiles.AddUserCommandToUser>();
+                cfg.AddProfile<Application.Profiles.GetUsersQueryToGetOptions>();
+                cfg.AddProfile<Application.Profiles.UpdateUserCommandToUser>();
             });
             var mapper = configuration.CreateMapper();
             return mapper;

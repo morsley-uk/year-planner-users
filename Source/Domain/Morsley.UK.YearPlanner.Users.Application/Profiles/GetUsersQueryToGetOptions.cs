@@ -6,8 +6,7 @@ namespace Morsley.UK.YearPlanner.Users.Application.Profiles
     {
         public GetUsersQueryToGetOptions()
         {
-            CreateMap<Application.Queries.GetUsersQuery,
-                      Application.Models.GetOptions>();
+            CreateMap<Application.Queries.GetUsersQuery, Application.Models.GetOptions>();
         }
     }
 }

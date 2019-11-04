@@ -9,7 +9,5 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Interfaces
         DateTime Created { get; set; }
 
         DateTime? Updated { get; set; }
-
-        DateTime? Deleted { get; set; }
     }
 }

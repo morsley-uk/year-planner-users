@@ -13,6 +13,7 @@ using Morsley.UK.YearPlanner.Users.API.Swagger;
 using Morsley.UK.YearPlanner.Users.Application.IoC;
 using Morsley.UK.YearPlanner.Users.Infrastructure.IoC;
 using Morsley.UK.YearPlanner.Users.Persistence.IoC;
+using Newtonsoft.Json.Serialization;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -110,7 +111,13 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         private static void AddControllers(IServiceCollection services)
         {
-            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddControllers()
+                    .AddNewtonsoftJson(setupAction =>
+                    {
+                        setupAction.SerializerSettings
+                                   .ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    })
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         private void AddInfrastructure(IServiceCollection services)

@@ -25,8 +25,6 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Models
 
         public DateTime? Updated { get; set; }
 
-        public DateTime? Deleted { get; set; }
-
         protected bool Equals(Entity<T> other)
         {
             return EqualityComparer<T>.Default.Equals(Id, other.Id) && Created.Equals(other.Created);

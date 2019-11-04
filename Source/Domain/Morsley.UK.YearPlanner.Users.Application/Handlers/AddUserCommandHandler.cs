@@ -26,7 +26,6 @@ namespace Morsley.UK.YearPlanner.Users.Application.Handlers
             Domain.Models.User user = _mapper.Map<Domain.Models.User>(command);
 
             _unitOfWork.UserRepository.Create(user);
-
             var numberOfRowsAffected = await _unitOfWork.CompleteAsync();
             // ToDo --> Log!
 

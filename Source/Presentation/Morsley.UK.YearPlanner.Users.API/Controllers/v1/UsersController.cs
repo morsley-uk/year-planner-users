@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using Morsley.UK.YearPlanner.Users.API.Models.v1.Request;
 using Morsley.UK.YearPlanner.Users.API.Models.v1.Response;
 using Morsley.UK.YearPlanner.Users.Application.Commands;
 using Morsley.UK.YearPlanner.Users.Application.Queries;
@@ -65,7 +67,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// <summary>
         /// Get a user
         /// </summary>
-        /// <param name="getUserRequest">The unique identifier of the user</param>
+        /// <param name="id">The unique identifier of the user</param>
         /// <returns>The requested user</returns>
         /// <response code="200">Success - OK - Returns the requested user</response>
         /// <response code="204">Success - No Content - No user matched the given identifier</response>
@@ -75,9 +77,11 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromRoute] API.Models.v1.Request.GetUserRequest getUserRequest)
+        public async Task<IActionResult> Get([FromRoute] Guid id)
         {
-            if (getUserRequest == null) return BadRequest();
+            if (id == default) return BadRequest();
+
+            var getUserRequest = new GetUserRequest(id);
 
             var getUserResponse = await GetUserResponse(getUserRequest);
 
@@ -109,6 +113,12 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             var response = await AddUser(request);
 
             return CreatedAtAction(nameof(Get), new { id = response.Id }, response);
+
+            /*
+             ToDo
+             As CreatedAtRoute and CreatedAtAction keep failing, I'm tempted to return a 201 and
+             manually add the expected 'Location' header.
+             */
         }
 
         #endregion POST
@@ -116,28 +126,29 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         #region PUT
 
         /// <summary>
-        /// Fully update a user
+        /// Upsert a user
         /// </summary>
         /// <param name="id">The unique identifier of the user</param>
-        /// <param name="request">An UpdateUserRequest object which contains all the updates</param>
-        /// <returns>The updated user</returns>
+        /// <param name="request">
+        /// An UpsertUserRequest object which contains all the
+        /// data required to either update or create a user.
+        /// </param>
+        /// <returns>The upserted user</returns>
         /// <response code="200">Success - OK - The user was successfully updated</response>
+        /// <response code="201">Success - Created - The user was successfully created</response>
         /// <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
-        /// <response code="404">Error - Not Found - No user matched the given identifier</response>
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(
+        
+        public async Task<IActionResult> Upsert(
             [FromRoute] Guid id,
-            [FromBody] API.Models.v1.Request.UpdateUserRequest request)
+            [FromBody] API.Models.v1.Request.UpsertUserRequest request)
         {
             if (request == null) return BadRequest();
-            request.Id = id;
 
-            var user = await UpdateUser(request);
-
-            return Ok(user);
+            return await UpsertUser(id, request);
         }
 
         #endregion PUT
@@ -148,7 +159,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         /// Fully or partially update a user
         /// </summary>
         /// <param name="id">The unique identifier of the user</param>
-        /// <param name="patchDocument">
+        /// <param name="request">
         /// A JSON Patch Document detailing the full or partial updates to the user
         /// </param>
         /// <returns>The updated user</returns>
@@ -174,12 +185,11 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Update(
             [FromRoute] Guid id,
-            [FromBody] API.Models.v1.Request.PartiallyUpdateUserRequest request)
+            [FromBody] JsonPatchDocument<API.Models.v1.Request.PartiallyUpdateUserRequest> patchDocument)
         {
-            if (request == null) return BadRequest();
-            request.Id = id;
+            if (patchDocument == null) return BadRequest();
 
-            var updatedUser = await UpdateUser(request);
+            var updatedUser = await UpdateUser(id, patchDocument);
 
             return Ok(updatedUser);
         }
@@ -200,9 +210,11 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] API.Models.v1.Request.DeleteUserRequest request)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            if (request == null) return BadRequest();
+            if (id == default) return BadRequest();
+
+            var request = new DeleteUserRequest(id);
 
             await DeleteUser(request);
 
@@ -213,7 +225,8 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
         #region Methods
 
-        private async Task<API.Models.v1.Response.UserResponse> AddUser(API.Models.v1.Request.CreateUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse> AddUser(
+            API.Models.v1.Request.CreateUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
@@ -224,19 +237,20 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return new UserResponse { Id = addedUserId };
         }
 
-        private async Task DeleteUser(API.Models.v1.Request.DeleteUserRequest request)
+        private async Task DeleteUser(
+            API.Models.v1.Request.DeleteUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            // ToDo --> Use AutoMapper!
-            var deleteUserCommand = new DeleteUserCommand();
+            var deleteUserCommand = _mapper.Map<DeleteUserCommand>(request);
 
             await _mediator.Send(deleteUserCommand);
 
             return;
         }
 
-        private async Task<API.Models.v1.Response.UserResponse?> GetUserResponse(API.Models.v1.Request.GetUserRequest getUserRequest)
+        private async Task<API.Models.v1.Response.UserResponse?> GetUserResponse(
+            API.Models.v1.Request.GetUserRequest getUserRequest)
         {
             if (getUserRequest == null) throw new ArgumentNullException(nameof(getUserRequest));
 
@@ -250,7 +264,8 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return userResponse;
         }
 
-        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(API.Models.v1.Request.GetUsersRequest getUsersRequest)
+        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(
+            API.Models.v1.Request.GetUsersRequest getUsersRequest)
         {
             if (getUsersRequest == null) throw new ArgumentNullException(nameof(getUsersRequest));
 
@@ -263,32 +278,40 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return pageOfUserResponses;
         }
 
-        private async Task<API.Models.v1.Response.UserResponse> UpdateUser(API.Models.v1.Request.UpdateUserRequest request)
+        private async Task<IActionResult> UpsertUser(
+            Guid userId,
+            API.Models.v1.Request.UpsertUserRequest request)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            // ToDo --> Use AutoMapper!
-            var updateUserCommand = new UpdateUserCommand();
+            // ToDo
+            // Are we updating or creating?
+            // We need to check if a user with the given identifier exists.
+            // If it does, we are updating, if it does not, we are creating.
+
+            var updateUserCommand = _mapper.Map<UpdateUserCommand>(request);
+            updateUserCommand.Id = userId;
 
             var updatedUser = await _mediator.Send(updateUserCommand);
 
-            // ToDo --> Use AutoMapper!
-            var updatedUserResponse = new UserResponse();
+            var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
 
-            return updatedUserResponse;
+            return Ok(updatedUserResponse);
         }
 
-        private async Task<API.Models.v1.Response.UserResponse> UpdateUser(API.Models.v1.Request.PartiallyUpdateUserRequest request)
+        private async Task<API.Models.v1.Response.UserResponse> UpdateUser(
+            Guid userId,
+            JsonPatchDocument<PartiallyUpdateUserRequest> patchDocument)
         {
-            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (patchDocument == null) throw new ArgumentNullException(nameof(patchDocument));
 
-            // ToDo --> Use AutoMapper!
-            var partialUpdateUserCommand = new PartialUpdateUserCommand();
+            var partiallyUpdateUserRequest = new PartiallyUpdateUserRequest(userId);
+            patchDocument.ApplyTo(partiallyUpdateUserRequest);
+            var partiallyUpdateUserCommand = _mapper.Map<PartiallyUpdateUserCommand>(partiallyUpdateUserRequest);
 
-            var updatedUser = await _mediator.Send(partialUpdateUserCommand);
+            var updatedUser = await _mediator.Send(partiallyUpdateUserCommand);
 
-            // ToDo --> Use AutoMapper!
-            var updatedUserResponse = new UserResponse();
+            var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
 
             return updatedUserResponse;
         }
