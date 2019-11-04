@@ -7,7 +7,6 @@ using Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Morsley.UK.YearPlanner.Users.Domain.Enumerations;
 using Xunit;
 
 namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
@@ -96,31 +95,6 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             return newValue;
         }
 
-        //private Sex? GetNewSex(Sex? oldSex)
-        //{
-        //    Sex? newSex;
-
-        //    do
-        //    {
-        //        newSex = _fixture.Create<Sex?>();
-        //    } while (newSex == oldSex);
-
-        //    return newSex;
-        //}
-
-        //private Title? GetNewTitle(Title? oldTitle)
-        //{
-        //    Title? newTitle;
-
-        //    do
-        //    {
-        //        newTitle = _fixture.Create<Title?>();
-        //    } while (newTitle == oldTitle);
-
-        //    return newTitle;
-
-        //}
-
         [Fact]
         public async Task Delete_Should_Delete_User_With_Valid_ID()
         {
@@ -162,9 +136,5 @@ namespace Morsley.UK.YearPlanner.Users.UnitOfWork.IntegrationTests
             // Assert...
             numberOfRowsAffected.Should().Be(1);
         }
-
-        #region Helper Methods
-
-        #endregion Helper Methods
     }
 }

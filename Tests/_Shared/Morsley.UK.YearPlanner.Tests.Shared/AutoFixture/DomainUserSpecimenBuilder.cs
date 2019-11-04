@@ -28,12 +28,8 @@ namespace Morsley.UK.YearPlanner.Users.Tests.Shared.AutoFixture
                 Id = Guid.NewGuid(),
                 Title = context.Create<Title>(),
                 Sex = context.Create<Sex>(),
-                Created = DateTime.MinValue//,
-                //Updated = null,
-                //Deleted = null
+                Created = DateTime.MinValue
             };
-
-
 
             return user;
         }

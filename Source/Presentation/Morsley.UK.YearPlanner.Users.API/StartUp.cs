@@ -28,7 +28,7 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         public StartUp(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         // Dependency Injection...
@@ -38,13 +38,9 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             AddApiVersioning(services);
 
-            services.AddApplication();
+            AddAutoMapper(services);
 
-            //var executingAssembly = Assembly.GetExecutingAssembly();
-            //services.AddAutoMapper(executingAssembly);
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            services.AddAutoMapper(assemblies);
+            AddApplication(services);
 
             AddInfrastructure(services);
 
@@ -65,8 +61,6 @@ namespace Morsley.UK.YearPlanner.Users.API
             applicationBuilder.UseHttpsRedirection();
 
             applicationBuilder.UseRouting();
-
-            //applicationBuilder.UseAuthorization();
 
             applicationBuilder.UseEndpoints(endpoints =>
             {
@@ -107,6 +101,17 @@ namespace Morsley.UK.YearPlanner.Users.API
             //{
             //    options.CustomSchemaIds(x => x.FullName);
             //});
+        }
+
+        private static void AddApplication(IServiceCollection services)
+        {
+            services.AddApplication();
+        }
+
+        private static void AddAutoMapper(IServiceCollection services)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            services.AddAutoMapper(assemblies);
         }
 
         private static void AddControllers(IServiceCollection services)

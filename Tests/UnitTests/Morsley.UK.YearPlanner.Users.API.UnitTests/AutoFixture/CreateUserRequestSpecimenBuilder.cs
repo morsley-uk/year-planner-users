@@ -11,6 +11,9 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests.AutoFixture
     {
         public object Create(object request, ISpecimenContext context)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var seededRequest = request as SeededRequest;
 
             if (seededRequest == null) return new NoSpecimen();

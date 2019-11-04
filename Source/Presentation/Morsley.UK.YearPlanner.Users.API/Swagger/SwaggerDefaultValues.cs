@@ -2,6 +2,7 @@
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
 using System.Linq;
 
 namespace Morsley.UK.YearPlanner.Users.API.Swagger
@@ -12,14 +13,12 @@ namespace Morsley.UK.YearPlanner.Users.API.Swagger
             OpenApiOperation operation, 
             OperationFilterContext context)
         {
+            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
             var apiDescription = context.ApiDescription;
 
             operation.Deprecated |= apiDescription.IsDeprecated();
-
-            //var apiVersion = apiDescription.GetApiVersion();
-            //var model = apiDescription.ActionDescriptor.GetApiVersionModel(ApiVersionMapping.Explicit | ApiVersionMapping.Implicit);
-
-            //operation.Deprecated = model.DeprecatedApiVersions.Contains(apiVersion);
 
             if (operation.Parameters == null) return;
 

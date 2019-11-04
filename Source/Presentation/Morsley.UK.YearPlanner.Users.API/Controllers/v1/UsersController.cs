@@ -31,8 +31,8 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
         public UsersController(IMediator mediator, IMapper mapper)
         {
-            _mediator = mediator;
-            _mapper = mapper;
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         #endregion Constructors
@@ -53,7 +53,8 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get([FromQuery] API.Models.v1.Request.GetUsersRequest getUsersRequest)
+        public async Task<IActionResult> Get(
+            [FromQuery] API.Models.v1.Request.GetUsersRequest getUsersRequest)
         {
             if (getUsersRequest == null) return BadRequest();
 
@@ -106,7 +107,8 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [Produces("application/json")]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Add([FromBody] API.Models.v1.Request.CreateUserRequest request)
+        public async Task<IActionResult> Add(
+            [FromBody] API.Models.v1.Request.CreateUserRequest request)
         {
             if (request == null) return BadRequest();
 

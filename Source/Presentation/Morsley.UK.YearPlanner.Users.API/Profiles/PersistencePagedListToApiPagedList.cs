@@ -12,7 +12,6 @@ namespace Morsley.UK.YearPlanner.Users.API.Profiles
 
             CreateMap<IPagedList<Domain.Models.User>, IPagedList<API.Models.v1.Response.UserResponse>>()
                 .ConvertUsing<PagedListTypeConverter>();
-
         }
     }
 
@@ -24,6 +23,8 @@ namespace Morsley.UK.YearPlanner.Users.API.Profiles
             IPagedList<API.Models.v1.Response.UserResponse> destination,
             ResolutionContext context)
         {
+            if (source == null) return null;
+
             var conversion = new PagedList<API.Models.v1.Response.UserResponse>();
 
             foreach (var user in source)
