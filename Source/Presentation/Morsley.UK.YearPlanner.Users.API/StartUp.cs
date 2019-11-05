@@ -40,8 +40,6 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             AddApiVersioning(services, _configuration);
 
-            //AddAutoMapper(services);
-
             AddApplication(services);
 
             AddInfrastructure(services);
