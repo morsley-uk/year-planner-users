@@ -131,23 +131,23 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
         }
 
         [Fact]
-        public void PartiallyUpdateUserRequest_To_PartiallyUpdateUserCommand()
+        public void PartiallyUpsertUserRequest_To_PartiallyUpdateUserCommand()
         {
             // Arrange...
             var configuration = new MapperConfiguration(configure =>
             {
-                configure.AddProfile<PartiallyUpdateUserRequestToPartiallyUpdateUserCommand>();
+                configure.AddProfile<PartiallyUpsertUserRequestToPartiallyUpdateUserCommand>();
             });
             var sut = configuration.CreateMapper();
             var userId = _fixture.Create<Guid>();
             var firstName = _fixture.Create<string>();
-            var partiallyUpdateUserRequest = new PartiallyUpdateUserRequest(userId)
+            var partiallyUpsertUserRequest = new PartiallyUpsertUserRequest(userId)
             {
                 FirstName = firstName
             };
 
             // Act...
-            var partiallyUpdateUserCommand = sut.Map<PartiallyUpdateUserCommand>(partiallyUpdateUserRequest);
+            var partiallyUpdateUserCommand = sut.Map<PartiallyUpdateUserCommand>(partiallyUpsertUserRequest);
 
             // Assert...
             partiallyUpdateUserCommand.Id.Should().Be(userId);
@@ -197,7 +197,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             // Arrange...
             var configuration = new MapperConfiguration(configure =>
             {
-                configure.AddProfile<UpdateUserRequestToUpdateUserCommand>();
+                configure.AddProfile<UpsertUserRequestToUpdateUserCommand>();
             });
             var sut = configuration.CreateMapper();
             var updateUserRequest = _fixture.Create<UpdateUserCommand>();
@@ -215,7 +215,7 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             // Arrange...
             var configuration = new MapperConfiguration(configure =>
             {
-                configure.AddProfile<UpdateUserRequestToUpdateUserCommand>();
+                configure.AddProfile<UpsertUserRequestToUpdateUserCommand>();
             });
             var sut = configuration.CreateMapper();
             var updateUserRequest = _fixture.Create<UpdateUserCommand>();

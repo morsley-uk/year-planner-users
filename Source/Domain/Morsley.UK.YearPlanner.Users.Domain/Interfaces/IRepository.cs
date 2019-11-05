@@ -12,6 +12,8 @@ namespace Morsley.UK.YearPlanner.Users.Domain.Interfaces
 
         void Delete(Guid id);
 
+        Task<bool> Exists(Guid id);
+
         IEnumerable<TEntity> Find(Func<TEntity, bool> predicate);
 
         Task<TEntity> Get(Guid id);

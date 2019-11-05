@@ -4,10 +4,12 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Morsley.UK.YearPlanner.Users.API.Controllers.v1;
 using Morsley.UK.YearPlanner.Users.API.Models.v1.Request;
 using Morsley.UK.YearPlanner.Users.API.Models.v1.Response;
 using Morsley.UK.YearPlanner.Users.Application.Commands;
+using Morsley.UK.YearPlanner.Users.Application.Queries;
 using Morsley.UK.YearPlanner.Users.Domain.Enumerations;
 using NSubstitute;
 using System;
@@ -86,10 +88,10 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             var mockMapper = Substitute.For<IMapper>();
             var sut = new UsersController(mockMediator, mockMapper);
             var userId = Guid.NewGuid();
-            const JsonPatchDocument<PartiallyUpdateUserRequest> patchDocument = null;
+            const JsonPatchDocument<PartiallyUpsertUserRequest> patchDocument = null;
 
             // Act...
-            var result = await sut.Update(userId, patchDocument);
+            var result = await sut.Upsert(userId, patchDocument);
 
             // Assert...
             result.Should().NotBeNull();
@@ -176,12 +178,14 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             var mockMediator = Substitute.For<IMediator>();
             var mockMapper = Substitute.For<IMapper>();
             var sut = new UsersController(mockMediator, mockMapper);
+            sut.ObjectValidator = Substitute.For<IObjectModelValidator>();
+            mockMediator.Send(Arg.Any<UserExistsQuery>()).Returns(true);
             var userId = Guid.NewGuid();
-            var patchDocument = new JsonPatchDocument<PartiallyUpdateUserRequest>();
+            var patchDocument = new JsonPatchDocument<PartiallyUpsertUserRequest>();
             patchDocument.Replace<string>(o => o.FirstName, "Foo");
 
             // Act...
-            var result = await sut.Update(userId, patchDocument);
+            var result = await sut.Upsert(userId, patchDocument);
 
             // Assert...
             result.Should().NotBeNull();
@@ -238,6 +242,8 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
                 Sex = sex
             };
             mockMapper.Map<UpdateUserCommand>(upsertUserRequest).Returns(updateUserCommand);
+
+            mockMediator.Send(Arg.Any<UserExistsQuery>()).Returns(true);
 
             var updatedUser = new Domain.Models.User(firstName, lastName)
             {
@@ -306,6 +312,8 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             };
             mockMapper.Map<UpdateUserCommand>(upsertUserRequest).Returns(updateUserCommand);
 
+            mockMediator.Send(Arg.Any<UserExistsQuery>()).Returns(true);
+
             var updatedUser = new Domain.Models.User(firstName, lastName)
             {
                 Id = userId,
@@ -343,7 +351,26 @@ namespace Morsley.UK.YearPlanner.Users.API.UnitTests
             value.Sex.Should().BeNullOrEmpty();
         }
 
+        [Fact]
+        public void TryValidateModel()
+        {
+            // Arrange...
+            var mockMediator = Substitute.For<IMediator>();
+            var mockMapper = Substitute.For<IMapper>();
+            var sut = new UsersController(mockMediator, mockMapper);
+            sut.ObjectValidator = Substitute.For<IObjectModelValidator>();
+            var userId = _fixture.Create<Guid>();
+            var partiallyUpsertUserRequest = new PartiallyUpsertUserRequest(userId);
+
+            // Act...
+            var result = sut.TryValidateModel(partiallyUpsertUserRequest);
+
+            // Assert...
+
+        }
+
         // ToDo
+        // Test PATCH creating a user
         // Test PUT creating a user
 
         #endregion Happy Paths
