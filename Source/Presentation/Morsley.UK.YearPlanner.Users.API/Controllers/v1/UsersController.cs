@@ -107,6 +107,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [Produces("application/json")]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Add(
             [FromBody] API.Models.v1.Request.CreateUserRequest request)
         {
@@ -128,10 +129,10 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         #region PUT
 
         /// <summary>
-        /// Upsert a user
+        /// Upsert a user.
         /// </summary>
         /// <param name="id">The unique identifier of the user</param>
-        /// <param name="request">
+        /// <param name="upsertUserRequest">
         /// An UpsertUserRequest object which contains all the
         /// data required to either update or create a user.
         /// </param>
@@ -143,14 +144,22 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+
         public async Task<IActionResult> Upsert(
             [FromRoute] Guid id,
-            [FromBody] API.Models.v1.Request.UpsertUserRequest request)
+            [FromBody] API.Models.v1.Request.UpsertUserRequest upsertUserRequest)
         {
-            if (request == null) return BadRequest();
+            if (upsertUserRequest == null) return BadRequest();
 
-            return await UpsertUser(id, request);
+            if (await DoesUserExist(id))
+            {
+                var updatedUser = await UpdateUser(id, upsertUserRequest);
+                return Ok(updatedUser);
+            }
+
+            var createUserRequest = _mapper.Map<CreateUserRequest>(upsertUserRequest);
+            return RedirectToAction(nameof(Add), createUserRequest);
         }
 
         #endregion PUT
@@ -185,15 +194,27 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> Update(
+        public async Task<IActionResult> Upsert(
             [FromRoute] Guid id,
-            [FromBody] JsonPatchDocument<API.Models.v1.Request.PartiallyUpdateUserRequest> patchDocument)
+            [FromBody] JsonPatchDocument<API.Models.v1.Request.PartiallyUpsertUserRequest> patchDocument)
         {
             if (patchDocument == null) return BadRequest();
 
-            var updatedUser = await UpdateUser(id, patchDocument);
+            var partiallyUpsertUserRequest = new PartiallyUpsertUserRequest(id);
+            patchDocument.ApplyTo(partiallyUpsertUserRequest, ModelState);
+            if (!TryValidateModel(partiallyUpsertUserRequest))
+            {
+                return ValidationProblem(ModelState);
+            }
 
-            return Ok(updatedUser);
+            if (await DoesUserExist(id))
+            {
+                var updatedUser = await PartiallyUpdateUser(id, partiallyUpsertUserRequest);
+                return Ok(updatedUser);
+            }
+
+            var createUserRequest = _mapper.Map<PartiallyUpsertUserRequest>(partiallyUpsertUserRequest);
+            return RedirectToAction(nameof(Add), createUserRequest);
         }
 
         #endregion PATCH
@@ -251,6 +272,13 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return;
         }
 
+        private async Task<bool> DoesUserExist(Guid id)
+        {
+            var userExistsQuery = new UserExistsQuery(id);
+            var exists = await _mediator.Send(userExistsQuery);
+            return exists;
+        }
+
         private async Task<API.Models.v1.Response.UserResponse?> GetUserResponse(
             API.Models.v1.Request.GetUserRequest getUserRequest)
         {
@@ -280,7 +308,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             return pageOfUserResponses;
         }
 
-        private async Task<IActionResult> UpsertUser(
+        private async Task<UserResponse> UpdateUser(
             Guid userId,
             API.Models.v1.Request.UpsertUserRequest request)
         {
@@ -298,18 +326,16 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
             var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
 
-            return Ok(updatedUserResponse);
+            return updatedUserResponse;
         }
 
-        private async Task<API.Models.v1.Response.UserResponse> UpdateUser(
+        private async Task<API.Models.v1.Response.UserResponse> PartiallyUpdateUser(
             Guid userId,
-            JsonPatchDocument<PartiallyUpdateUserRequest> patchDocument)
+            PartiallyUpsertUserRequest partiallyUpsertUserRequest)
         {
-            if (patchDocument == null) throw new ArgumentNullException(nameof(patchDocument));
+            if (partiallyUpsertUserRequest == null) throw new ArgumentNullException(nameof(partiallyUpsertUserRequest));
 
-            var partiallyUpdateUserRequest = new PartiallyUpdateUserRequest(userId);
-            patchDocument.ApplyTo(partiallyUpdateUserRequest);
-            var partiallyUpdateUserCommand = _mapper.Map<PartiallyUpdateUserCommand>(partiallyUpdateUserRequest);
+            var partiallyUpdateUserCommand = _mapper.Map<PartiallyUpdateUserCommand>(partiallyUpsertUserRequest);
 
             var updatedUser = await _mediator.Send(partiallyUpdateUserCommand);
 

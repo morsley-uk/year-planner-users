@@ -39,6 +39,11 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Repositories
             }
         }
 
+        public async Task<bool> Exists(Guid id)
+        {
+            return await Context.Set<TEntity>().AnyAsync(e => e.Id == id);
+        }
+
         protected virtual IQueryable<TEntity> Filter(IQueryable<TEntity> entities, IGetOptions options)
         {
             return entities;

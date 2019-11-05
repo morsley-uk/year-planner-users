@@ -3,9 +3,9 @@ using Morsley.UK.YearPlanner.Users.API.Converters;
 
 namespace Morsley.UK.YearPlanner.Users.API.Profiles
 {
-    public class PartiallyUpdateUserRequestToPartiallyUpdateUserCommand : Profile
+    public class PartiallyUpsertUserRequestToPartiallyUpdateUserCommand : Profile
     {
-        public PartiallyUpdateUserRequestToPartiallyUpdateUserCommand()
+        public PartiallyUpsertUserRequestToPartiallyUpdateUserCommand()
         {
             CreateMap<string?, Domain.Enumerations.Sex?>()
                 .ConvertUsing(new StringSexToEnumSexConverter());
@@ -13,7 +13,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Profiles
             CreateMap<string?, Domain.Enumerations.Title?>()
                 .ConvertUsing(new StringTitleToEnumTitleConverter());
 
-            CreateMap<API.Models.v1.Request.PartiallyUpdateUserRequest, Application.Commands.PartiallyUpdateUserCommand>();
+            CreateMap<API.Models.v1.Request.PartiallyUpsertUserRequest, Application.Commands.PartiallyUpdateUserCommand>();
         }
     }
 }

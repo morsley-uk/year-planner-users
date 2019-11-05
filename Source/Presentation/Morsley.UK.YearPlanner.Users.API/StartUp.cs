@@ -1,6 +1,8 @@
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
@@ -34,11 +36,9 @@ namespace Morsley.UK.YearPlanner.Users.API
         // Dependency Injection...
         public void ConfigureServices(IServiceCollection services)
         {
-            AddControllers(services);
+            AddAPI(services);
 
-            AddApiVersioning(services);
-
-            AddAutoMapper(services);
+            AddApiVersioning(services, _configuration);
 
             AddApplication(services);
 
@@ -72,9 +72,9 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         #region Private Methods
 
-        private void AddApiVersioning(IServiceCollection services)
+        private static void AddApiVersioning(IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<OpenApiInfo>(_configuration.GetSection(nameof(OpenApiInfo)));
+            services.Configure<OpenApiInfo>(configuration.GetSection(nameof(OpenApiInfo)));
 
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
@@ -105,11 +105,12 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         private static void AddAutoMapper(IServiceCollection services)
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            services.AddAutoMapper(assemblies);
+            //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            services.AddAutoMapper(executingAssembly);
         }
 
-        private static void AddControllers(IServiceCollection services)
+        private static void AddAPI(IServiceCollection services)
         {
             services.AddControllers()
                     .AddNewtonsoftJson(setupAction =>
@@ -117,10 +118,29 @@ namespace Morsley.UK.YearPlanner.Users.API
                         setupAction.SerializerSettings
                                    .ContractResolver = new CamelCasePropertyNamesContractResolver();
                     })
+                    .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<StartUp>())
+                    .ConfigureApiBehaviorOptions(setupAction =>
+                    {
+                        setupAction.InvalidModelStateResponseFactory = context =>
+                        {
+                            var details = new ValidationProblemDetails(context.ModelState)
+                            {
+                                Title = "Validation error(s) occurred!",
+                                Status = StatusCodes.Status422UnprocessableEntity,
+                                Instance = context.HttpContext.Request.Path
+                            };
+                            details.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+
+                            return new UnprocessableEntityObjectResult(details)
+                            {
+                                ContentTypes = { "application/json" }
+                            };
+                        };
+                    })
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
-        private void AddInfrastructure(IServiceCollection services)
+        private static void AddInfrastructure(IServiceCollection services)
         {
             services.AddInfrastructure();
         }

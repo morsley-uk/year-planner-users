@@ -36,10 +36,10 @@
         </member>
         <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Upsert(System.Guid,Morsley.UK.YearPlanner.Users.API.Models.v1.Request.UpsertUserRequest)">
             <summary>
-            Upsert a user
+            Upsert a user.
             </summary>
             <param name="id">The unique identifier of the user</param>
-            <param name="request">
+            <param name="upsertUserRequest">
             An UpsertUserRequest object which contains all the
             data required to either update or create a user.
             </param>
@@ -48,7 +48,7 @@
             <response code="201">Success - Created - The user was successfully created</response>
             <response code="400">Error - Bad Request - It was not possible to bind the request JSON</response>
         </member>
-        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Update(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Morsley.UK.YearPlanner.Users.API.Models.v1.Request.PartiallyUpdateUserRequest})">
+        <member name="M:Morsley.UK.YearPlanner.Users.API.Controllers.v1.UsersController.Upsert(System.Guid,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{Morsley.UK.YearPlanner.Users.API.Models.v1.Request.PartiallyUpsertUserRequest})">
             <summary>
             Fully or partially update a user
             </summary>

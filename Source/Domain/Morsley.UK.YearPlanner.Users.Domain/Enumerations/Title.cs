@@ -3,10 +3,10 @@
     public enum Title
     {
         Mx,
-        Mr,
         Master,
+        Mr,
         Ms,
-        Mrs,
-        Miss
+        Miss,
+        Mrs
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Morsley.UK.YearPlanner.Users.API.Models.v1.Request
 {
-    public class PartiallyUpdateUserRequest
+    public class PartiallyUpsertUserRequest
     {
         private string? _title;
         private string? _firstName;
         private string? _lastName;
         private string? _sex;
 
-        public PartiallyUpdateUserRequest(Guid id)
+        public PartiallyUpsertUserRequest(Guid id)
         {
             Id = id;
         }

@@ -23,7 +23,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Swagger
         public void Configure(SwaggerGenOptions options)
         {
             if (options == null) throw new ArgumentNullException(nameof(options));
-
+            
             foreach (ApiVersionDescription description in _provider.ApiVersionDescriptions)
             {
                 options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));

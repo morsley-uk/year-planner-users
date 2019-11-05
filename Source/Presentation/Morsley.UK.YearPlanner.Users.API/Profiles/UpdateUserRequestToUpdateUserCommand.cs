@@ -3,9 +3,9 @@ using Morsley.UK.YearPlanner.Users.API.Converters;
 
 namespace Morsley.UK.YearPlanner.Users.API.Profiles
 {
-    public class UpdateUserRequestToUpdateUserCommand : Profile
+    public class UpsertUserRequestToUpdateUserCommand : Profile
     {
-        public UpdateUserRequestToUpdateUserCommand()
+        public UpsertUserRequestToUpdateUserCommand()
         {
             CreateMap<string?, Domain.Enumerations.Sex?>()
                 .ConvertUsing(new StringSexToEnumSexConverter());

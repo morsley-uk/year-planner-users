@@ -7,7 +7,11 @@ namespace Morsley.UK.YearPlanner.Users.Application.Models
 {
     public class PagedList<T> : List<T>, IPagedList<T>
     {
-        protected PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+        protected PagedList(
+            IEnumerable<T> items,
+            int count,
+            int pageNumber,
+            int pageSize)
         {
             AddRange(items);
             TotalCount = count;
@@ -35,7 +39,10 @@ namespace Morsley.UK.YearPlanner.Users.Application.Models
 
         public bool HasNext => CurrentPage < TotalPages;
 
-        public static PagedList<T> Create(IQueryable<T> source, int pageNumber, int pageSize)
+        public static PagedList<T> Create(
+            IQueryable<T> source,
+            int pageNumber,
+            int pageSize)
         {
             if (source == null) {throw new ArgumentNullException(nameof(source), "Cannot be null!");}
             if (pageNumber == 0) throw new ArgumentOutOfRangeException(nameof(pageNumber), "Must be greater than zero!");
