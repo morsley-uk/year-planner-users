@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Morsley.UK.YearPlanner.Users.Domain\Morsley.UK.YearPlanner.Users.Domain.csproj" />
+    <ProjectReference Include="..\..\_Shared\Morsley.UK.YearPlanner.Users.Shared\Morsley.UK.YearPlanner.Users.Shared.csproj" />
   </ItemGroup>
 
 </Project>

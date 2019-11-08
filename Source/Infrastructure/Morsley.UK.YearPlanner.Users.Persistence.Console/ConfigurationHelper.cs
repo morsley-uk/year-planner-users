@@ -1,12 +1,21 @@
 ﻿using System;
+using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 
 namespace Morsley.UK.YearPlanner.Users.Persistence.Console
 {
     public class ConfigurationHelper
     {
-        public static string GetConnectionString()
+        private readonly IEnvironmentService _environmentService;
+
+        public ConfigurationHelper(IEnvironmentService environmentService)
         {
-            var connectionString = Shared.Environment.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+            _environmentService = environmentService;
+        }
+
+        public string GetConnectionString()
+        {
+            //var connectionString = Shared.EnvironmentService.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+            var connectionString = _environmentService.GetVariable(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
 
             if (!string.IsNullOrEmpty(connectionString))
             {

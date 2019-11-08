@@ -16,7 +16,6 @@ using Morsley.UK.YearPlanner.Users.Application.IoC;
 using Morsley.UK.YearPlanner.Users.Infrastructure.IoC;
 using Morsley.UK.YearPlanner.Users.Persistence.IoC;
 using Newtonsoft.Json.Serialization;
-using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 using System.IO;
@@ -45,6 +44,11 @@ namespace Morsley.UK.YearPlanner.Users.API
             AddInfrastructure(services);
 
             AddPersistence(services);
+
+            //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            //services.AddAutoMapper(assemblies);
+            services.AddAutoMapper(typeof(API.StartUp),
+                                   typeof(Application.IoC.ApplicationServiceCollectionExtensions));
         }
 
         // Pipeline...
@@ -70,9 +74,9 @@ namespace Morsley.UK.YearPlanner.Users.API
             ConfigureApiVersioning(applicationBuilder, apiVersionDescriptionProvider);
         }
 
-        #region Private Methods
+        #region Methods
 
-        private static void AddApiVersioning(IServiceCollection services, IConfiguration configuration)
+        protected virtual void AddApiVersioning(IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<OpenApiInfo>(configuration.GetSection(nameof(OpenApiInfo)));
 
@@ -98,19 +102,19 @@ namespace Morsley.UK.YearPlanner.Users.API
             });
         }
 
-        private static void AddApplication(IServiceCollection services)
+        protected virtual void AddApplication(IServiceCollection services)
         {
             services.AddApplication();
         }
 
-        private static void AddAutoMapper(IServiceCollection services)
+        protected virtual void AddAutoMapper(IServiceCollection services)
         {
             //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
             var executingAssembly = Assembly.GetExecutingAssembly();
             services.AddAutoMapper(executingAssembly);
         }
 
-        private static void AddAPI(IServiceCollection services)
+        protected virtual void AddAPI(IServiceCollection services)
         {
             services.AddControllers()
                     .AddNewtonsoftJson(setupAction =>
@@ -140,25 +144,26 @@ namespace Morsley.UK.YearPlanner.Users.API
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
-        private static void AddInfrastructure(IServiceCollection services)
+        protected virtual void AddInfrastructure(IServiceCollection services)
         {
             services.AddInfrastructure();
         }
 
-        private static void AddPersistence(IServiceCollection services)
+        protected virtual void AddPersistence(IServiceCollection services)
         {
-            var settings = Shared.Environment.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+            //var settings = Shared.EnvironmentService.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+            //var settings = environmentService.GetVariable(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
 
-            if (string.IsNullOrEmpty(settings))
-            {
-                Log.Fatal("Could not determine Persistence Key! :-(");
-                return;
-            }
+            //if (string.IsNullOrEmpty(settings))
+            //{
+            //    Log.Fatal("Could not determine Persistence Key! :-(");
+            //    return;
+            //}
 
-            services.AddPersistence(settings);
+            services.AddPersistence();
         }
 
-        private void ConfigureApiVersioning(
+        protected virtual void ConfigureApiVersioning(
             IApplicationBuilder applicationBuilder,
             IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
@@ -176,7 +181,7 @@ namespace Morsley.UK.YearPlanner.Users.API
             });
         }
 
-        static string XmlCommentsFilePath
+        protected virtual string XmlCommentsFilePath
         {
             get
             {
@@ -186,6 +191,6 @@ namespace Morsley.UK.YearPlanner.Users.API
             }
         }
         
-        #endregion Private Methods
+        #endregion Methods
     }
 }

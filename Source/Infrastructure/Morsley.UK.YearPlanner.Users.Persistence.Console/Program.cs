@@ -31,7 +31,7 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Console
         {
             try
             {
-                connectionString = Shared.Environment.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
+                connectionString = Shared.EnvironmentService.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
                 return connectionString != null;
             }
             catch (Exception e)

@@ -72,6 +72,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.User
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.Users.Application.UnitTests", "Tests\UnitTests\Morsley.UK.YearPlanner.Users.Application.UnitTests\Morsley.UK.YearPlanner.Users.Application.UnitTests.csproj", "{7B25C1E8-FC67-49D1-9EBD-42496BEE468F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.Users.API.SystemTests", "Tests\SystemTests\Morsley.UK.YearPlanner.Users.API.SystemTests\Morsley.UK.YearPlanner.Users.API.SystemTests.csproj", "{1CAA0152-EACD-49C6-B831-6CFEC34D8918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -134,6 +136,10 @@ Global
 		{7B25C1E8-FC67-49D1-9EBD-42496BEE468F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B25C1E8-FC67-49D1-9EBD-42496BEE468F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B25C1E8-FC67-49D1-9EBD-42496BEE468F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CAA0152-EACD-49C6-B831-6CFEC34D8918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CAA0152-EACD-49C6-B831-6CFEC34D8918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CAA0152-EACD-49C6-B831-6CFEC34D8918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CAA0152-EACD-49C6-B831-6CFEC34D8918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -161,6 +167,7 @@ Global
 		{A177EB28-C816-4725-B73F-86F660AC1181} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 		{0F08F486-5F4C-4090-B20C-C38CA61489C0} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 		{7B25C1E8-FC67-49D1-9EBD-42496BEE468F} = {33B46F13-7522-4375-9641-BABD521ABC42}
+		{1CAA0152-EACD-49C6-B831-6CFEC34D8918} = {23D80980-0E30-4AAE-87B9-3EA449A707B1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A59CD7FB-A695-4D5C-B7EF-4734AB93DB9C}
