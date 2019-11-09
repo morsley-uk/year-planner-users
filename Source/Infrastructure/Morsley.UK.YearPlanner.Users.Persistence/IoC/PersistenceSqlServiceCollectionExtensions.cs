@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
+using Morsley.UK.YearPlanner.Users.Persistence.Contexts;
+using Morsley.UK.YearPlanner.Users.Persistence.Repositories;
+using System;
 
 namespace Morsley.UK.YearPlanner.Users.Persistence.IoC
 {
@@ -13,11 +17,13 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.IoC
 
             var settings = environmentService.GetVariable(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
 
-            //var sp = services.AddDbContext<DataContext>((provider, options) =>
-            //{
-            //    options.ConfigureWarnings(builder => builder.Default(WarningBehavior.Log))
-            //           .UseSqlServer(settings, sqlOptions => sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), null));
-            //}).BuildServiceProvider();
+            services.AddDbContext<DataContext>((provider, options) =>
+            {
+                options.ConfigureWarnings(builder => builder.Default(WarningBehavior.Log))
+                       .UseSqlServer(settings, sqlOptions => sqlOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), null));
+            });
+
+            // ToDo --> Should the following go in Main (Program.cs)?
 
             //var context = sp.GetService<DataContext>();
             //try
@@ -31,8 +37,8 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.IoC
             //    Log.Fatal(e, "Cannot ensure database created!");
             //}
 
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-            //services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserRepository, UserRepository>();
             
             return services;
         }

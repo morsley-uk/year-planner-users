@@ -37,7 +37,7 @@ namespace Morsley.UK.YearPlanner.Users.API.SystemTests
             HttpResponseMessage response = await client.GetAsync(RequestUri);
 
             // Assert...
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
             // Dispose...
             client.Dispose();
@@ -62,7 +62,6 @@ namespace Morsley.UK.YearPlanner.Users.API.SystemTests
             // Dispose...
             client.Dispose();
         }
-
 
         #region Helper Methods
 

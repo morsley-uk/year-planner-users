@@ -12,6 +12,11 @@ namespace Morsley.UK.YearPlanner.Users.Persistence.Contexts
 
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
         //public DbSet<Address> Addresses { get; set; }
 
         //public DbSet<Country> Countries { get; set; }

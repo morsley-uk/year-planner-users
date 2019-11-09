@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using Morsley.UK.YearPlanner.Users.Persistence.Contexts;
@@ -11,15 +12,39 @@ namespace Morsley.UK.YearPlanner.Users.API.SystemTests
 {
     public class TestWebApplicationFactory<TStartUp> : WebApplicationFactory<TStartUp> where TStartUp : class
     {
-        //protected override IHostBuilder CreateHostBuilder()
-        //{
-        //    var builder = base.CreateHostBuilder();
-        //    //.ConfigureHostConfiguration(configure => configure.AddEnvironmentVariables(""));
+        protected override IHostBuilder CreateHostBuilder()
+        {
+            var builder = base.CreateHostBuilder();
+            //.ConfigureHostConfiguration(configure => configure.AddEnvironmentVariables(""));
 
-        //    builder.UseEnvironment("Testing");
+            builder.ConfigureAppConfiguration(configurationBuilder =>
+            {
 
-        //    return builder;
-        //}
+            });
+
+            //builder.ConfigureContainer();
+
+            builder.ConfigureHostConfiguration(configurationBuilder =>
+            {
+
+            });
+
+            builder.ConfigureServices(collection =>
+            {
+
+            });
+
+            //builder.UseServiceProviderFactory();
+
+            builder.ConfigureHostConfiguration(configurationBuilder =>
+            {
+
+            });
+
+            builder.UseEnvironment("Testing");
+
+            return builder;
+        }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {

@@ -45,8 +45,6 @@ namespace Morsley.UK.YearPlanner.Users.API
 
             AddPersistence(services);
 
-            //var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            //services.AddAutoMapper(assemblies);
             services.AddAutoMapper(typeof(API.StartUp),
                                    typeof(Application.IoC.ApplicationServiceCollectionExtensions));
         }
@@ -151,15 +149,6 @@ namespace Morsley.UK.YearPlanner.Users.API
 
         protected virtual void AddPersistence(IServiceCollection services)
         {
-            //var settings = Shared.EnvironmentService.GetEnvironmentVariableValueByKey(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
-            //var settings = environmentService.GetVariable(Shared.Constants.EnvironmentVariables.UsersPersistenceKey);
-
-            //if (string.IsNullOrEmpty(settings))
-            //{
-            //    Log.Fatal("Could not determine Persistence Key! :-(");
-            //    return;
-            //}
-
             services.AddPersistence();
         }
 

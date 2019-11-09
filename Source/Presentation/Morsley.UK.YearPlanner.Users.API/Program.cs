@@ -27,6 +27,9 @@ namespace Morsley.UK.YearPlanner.Users.API
             {
                 Log.Information("Starting web host");
                 CreateHostBuilder(args).Build().Run();
+
+                // ToDo --> Investigate putting a DB.EnsureCreated if Development here...
+
                 return 0;
             }
             catch (Exception e)
