@@ -27,6 +27,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{33B46F13-7522-4375-9641-BABD521ABC42}"
 	ProjectSection(SolutionItems) = preProject
 		Tests\UnitTests\ReadMe.md = Tests\UnitTests\ReadMe.md
+		Tests\UnitTests\run-unit-tests.sh = Tests\UnitTests\run-unit-tests.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}"
@@ -71,6 +72,22 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.Users.API.IntegrationTests", "Tests\IntegrationTests\Morsley.UK.YearPlanner.Users.API.IntegrationTests\Morsley.UK.YearPlanner.Users.API.IntegrationTests.csproj", "{0F08F486-5F4C-4090-B20C-C38CA61489C0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Morsley.UK.YearPlanner.Users.Application.UnitTests", "Tests\UnitTests\Morsley.UK.YearPlanner.Users.Application.UnitTests\Morsley.UK.YearPlanner.Users.Application.UnitTests.csproj", "{7B25C1E8-FC67-49D1-9EBD-42496BEE468F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{620F8614-2C0F-40D1-99A7-6924BA8D6408}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CI", "CI", "{F49AB2BB-E4A9-43B7-B06A-AA18507F4847}"
+	ProjectSection(SolutionItems) = preProject
+		Pipelines\CI\pipeline.yaml = Pipelines\CI\pipeline.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CD", "CD", "{F89BB4F2-C909-4364-B870-3795DA47D6D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4FD94A8B-33B4-4EB2-A9DF-49B5FA5E45D3}"
+	ProjectSection(SolutionItems) = preProject
+		Pipelines\CI\Scripts\build.sh = Pipelines\CI\Scripts\build.sh
+		Pipelines\CI\Scripts\clean.sh = Pipelines\CI\Scripts\clean.sh
+		Pipelines\CI\Scripts\run-unit-tests.sh = Pipelines\CI\Scripts\run-unit-tests.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +178,9 @@ Global
 		{A177EB28-C816-4725-B73F-86F660AC1181} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 		{0F08F486-5F4C-4090-B20C-C38CA61489C0} = {C4A95A27-B6E3-49DC-B309-79ED1B79A1EB}
 		{7B25C1E8-FC67-49D1-9EBD-42496BEE468F} = {33B46F13-7522-4375-9641-BABD521ABC42}
+		{F49AB2BB-E4A9-43B7-B06A-AA18507F4847} = {620F8614-2C0F-40D1-99A7-6924BA8D6408}
+		{F89BB4F2-C909-4364-B870-3795DA47D6D6} = {620F8614-2C0F-40D1-99A7-6924BA8D6408}
+		{4FD94A8B-33B4-4EB2-A9DF-49B5FA5E45D3} = {F49AB2BB-E4A9-43B7-B06A-AA18507F4847}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A59CD7FB-A695-4D5C-B7EF-4734AB93DB9C}
