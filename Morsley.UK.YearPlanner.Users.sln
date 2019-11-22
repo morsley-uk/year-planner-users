@@ -86,6 +86,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4FD9
 	ProjectSection(SolutionItems) = preProject
 		Pipelines\CI\Scripts\build.sh = Pipelines\CI\Scripts\build.sh
 		Pipelines\CI\Scripts\clean.sh = Pipelines\CI\Scripts\clean.sh
+		Pipelines\CI\Scripts\publish.sh = Pipelines\CI\Scripts\publish.sh
 		Pipelines\CI\Scripts\run-unit-tests.sh = Pipelines\CI\Scripts\run-unit-tests.sh
 	EndProjectSection
 EndProject
