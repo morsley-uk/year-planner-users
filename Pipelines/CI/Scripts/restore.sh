@@ -6,7 +6,7 @@ echo "--------------------------------------------------------------------------
 printf "\n"
 echo "---------- RESTORE INITIATED ----------"
 
-dotnet restore --verbosity normal --force --no-cache
+dotnet restore --verbosity normal
 
 echo "---------- RESTORE FINISHED ----------"
 printf "\n"
