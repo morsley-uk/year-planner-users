@@ -1,14 +1,15 @@
-﻿using AutoMapper;
-using MediatR;
+﻿//using AutoMapper;
+//using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
+//using Microsoft.EntityFrameworkCore.Internal;
+using Morsley.UK.YearPlanner.Users.API.Models.v1;
 using Morsley.UK.YearPlanner.Users.API.Models.v1.Request;
 using Morsley.UK.YearPlanner.Users.API.Models.v1.Response;
-using Morsley.UK.YearPlanner.Users.Application.Commands;
-using Morsley.UK.YearPlanner.Users.Application.Queries;
-using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
+//using Morsley.UK.YearPlanner.Users.Application.Commands;
+//using Morsley.UK.YearPlanner.Users.Application.Queries;
+//using Morsley.UK.YearPlanner.Users.Domain.Interfaces;
 using System;
 using System.Threading.Tasks;
 
@@ -22,18 +23,18 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
     {
         #region Fields
 
-        private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
+        //private readonly IMediator _mediator;
+        //private readonly IMapper _mapper;
 
         #endregion Fields
 
         #region Constructors
 
-        public UsersController(IMediator mediator, IMapper mapper)
-        {
-            _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-        }
+        //public UsersController(IMediator mediator, IMapper mapper)
+        //{
+        //    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        //    _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        //}
 
         #endregion Constructors
 
@@ -60,7 +61,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
 
             var userResponses = await GetUserResponses(getUsersRequest);
 
-            if (userResponses == null || !userResponses.Any()) return NoContent();
+            if (userResponses == null || userResponses.Count == 0) return NoContent();
 
             return Ok(userResponses);
         }
@@ -152,14 +153,16 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (upsertUserRequest == null) return BadRequest();
 
-            if (await DoesUserExist(id))
-            {
-                var updatedUser = await UpdateUser(id, upsertUserRequest);
-                return Ok(updatedUser);
-            }
+            //if (await DoesUserExist(id))
+            //{
+            //    var updatedUser = await UpdateUser(id, upsertUserRequest);
+            //    return Ok(updatedUser);
+            //}
 
-            var createUserRequest = _mapper.Map<CreateUserRequest>(upsertUserRequest);
-            return RedirectToAction(nameof(Add), createUserRequest);
+            //var createUserRequest = _mapper.Map<CreateUserRequest>(upsertUserRequest);
+            //return RedirectToAction(nameof(Add), createUserRequest);
+
+            throw new NotImplementedException();
         }
 
         #endregion PUT
@@ -200,21 +203,23 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (patchDocument == null) return BadRequest();
 
-            var partiallyUpsertUserRequest = new PartiallyUpsertUserRequest(id);
-            patchDocument.ApplyTo(partiallyUpsertUserRequest, ModelState);
-            if (!TryValidateModel(partiallyUpsertUserRequest))
-            {
-                return ValidationProblem(ModelState);
-            }
+            //var partiallyUpsertUserRequest = new PartiallyUpsertUserRequest(id);
+            //patchDocument.ApplyTo(partiallyUpsertUserRequest, ModelState);
+            //if (!TryValidateModel(partiallyUpsertUserRequest))
+            //{
+            //    return ValidationProblem(ModelState);
+            //}
 
-            if (await DoesUserExist(id))
-            {
-                var updatedUser = await PartiallyUpdateUser(id, partiallyUpsertUserRequest);
-                return Ok(updatedUser);
-            }
+            //if (await DoesUserExist(id))
+            //{
+            //    var updatedUser = await PartiallyUpdateUser(id, partiallyUpsertUserRequest);
+            //    return Ok(updatedUser);
+            //}
 
-            var createUserRequest = _mapper.Map<PartiallyUpsertUserRequest>(partiallyUpsertUserRequest);
-            return RedirectToAction(nameof(Add), createUserRequest);
+            //var createUserRequest = _mapper.Map<PartiallyUpsertUserRequest>(partiallyUpsertUserRequest);
+            //return RedirectToAction(nameof(Add), createUserRequest);
+
+            throw new NotImplementedException();
         }
 
         #endregion PATCH
@@ -253,11 +258,13 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var addUserCommand = _mapper.Map<AddUserCommand>(request);
+            //var addUserCommand = _mapper.Map<AddUserCommand>(request);
 
-            var addedUserId = await _mediator.Send(addUserCommand);
+            //var addedUserId = await _mediator.Send(addUserCommand);
 
-            return new UserResponse { Id = addedUserId };
+            //return new UserResponse { Id = addedUserId };
+
+            throw new NotImplementedException();
         }
 
         private async Task DeleteUser(
@@ -265,18 +272,22 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
-            var deleteUserCommand = _mapper.Map<DeleteUserCommand>(request);
+            //var deleteUserCommand = _mapper.Map<DeleteUserCommand>(request);
 
-            await _mediator.Send(deleteUserCommand);
+            //await _mediator.Send(deleteUserCommand);
 
-            return;
+            //return;
+
+            throw new NotImplementedException();
         }
 
         private async Task<bool> DoesUserExist(Guid id)
         {
-            var userExistsQuery = new UserExistsQuery(id);
-            var exists = await _mediator.Send(userExistsQuery);
-            return exists;
+            //var userExistsQuery = new UserExistsQuery(id);
+            //var exists = await _mediator.Send(userExistsQuery);
+            //return exists;
+
+            throw new NotImplementedException();
         }
 
         private async Task<API.Models.v1.Response.UserResponse?> GetUserResponse(
@@ -284,28 +295,32 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (getUserRequest == null) throw new ArgumentNullException(nameof(getUserRequest));
 
-            var getUserQuery = _mapper.Map<GetUserQuery>(getUserRequest);
+            //var getUserQuery = _mapper.Map<GetUserQuery>(getUserRequest);
 
-            var user = await _mediator.Send(getUserQuery);
-            if (user == null) return null;
+            //var user = await _mediator.Send(getUserQuery);
+            //if (user == null) return null;
 
-            var userResponse = _mapper.Map<UserResponse>(user);
+            //var userResponse = _mapper.Map<UserResponse>(user);
 
-            return userResponse;
+            //return userResponse;
+
+            throw new NotImplementedException();
         }
 
-        private async Task<IPagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(
+        private async Task<PagedList<API.Models.v1.Response.UserResponse>> GetUserResponses(
             API.Models.v1.Request.GetUsersRequest getUsersRequest)
         {
             if (getUsersRequest == null) throw new ArgumentNullException(nameof(getUsersRequest));
 
-            var query = _mapper.Map<GetUsersQuery>(getUsersRequest);
+            //var query = _mapper.Map<GetUsersQuery>(getUsersRequest);
 
-            var pageOfUsers = await _mediator.Send(query);
+            //var pageOfUsers = await _mediator.Send(query);
 
-            var pageOfUserResponses = _mapper.Map<API.Models.v1.PagedList<UserResponse>>(pageOfUsers);
+            //var pageOfUserResponses = _mapper.Map<API.Models.v1.PagedList<UserResponse>>(pageOfUsers);
 
-            return pageOfUserResponses;
+            //return pageOfUserResponses;
+
+            throw new NotImplementedException();
         }
 
         private async Task<UserResponse> UpdateUser(
@@ -319,14 +334,16 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
             // We need to check if a user with the given identifier exists.
             // If it does, we are updating, if it does not, we are creating.
 
-            var updateUserCommand = _mapper.Map<UpdateUserCommand>(request);
-            updateUserCommand.Id = userId;
+            //var updateUserCommand = _mapper.Map<UpdateUserCommand>(request);
+            //updateUserCommand.Id = userId;
 
-            var updatedUser = await _mediator.Send(updateUserCommand);
+            //var updatedUser = await _mediator.Send(updateUserCommand);
 
-            var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
+            //var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
 
-            return updatedUserResponse;
+            //return updatedUserResponse;
+
+            throw new NotImplementedException();
         }
 
         private async Task<API.Models.v1.Response.UserResponse> PartiallyUpdateUser(
@@ -335,13 +352,15 @@ namespace Morsley.UK.YearPlanner.Users.API.Controllers.v1
         {
             if (partiallyUpsertUserRequest == null) throw new ArgumentNullException(nameof(partiallyUpsertUserRequest));
 
-            var partiallyUpdateUserCommand = _mapper.Map<PartiallyUpdateUserCommand>(partiallyUpsertUserRequest);
+            //var partiallyUpdateUserCommand = _mapper.Map<PartiallyUpdateUserCommand>(partiallyUpsertUserRequest);
 
-            var updatedUser = await _mediator.Send(partiallyUpdateUserCommand);
+            //var updatedUser = await _mediator.Send(partiallyUpdateUserCommand);
 
-            var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
+            //var updatedUserResponse = _mapper.Map<UserResponse>(updatedUser);
 
-            return updatedUserResponse;
+            //return updatedUserResponse;
+
+            throw new NotImplementedException();
         }
 
         #endregion Methods

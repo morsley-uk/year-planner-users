@@ -1,13 +1,11 @@
 #!/bin/bash
 
-#cd ../../..
+parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")";pwd -P)
+common="$parent_path"/../../Scripts
+source $common/header.sh
 
-echo "-------------------------------------------------------------------------------"
-printf "\n"
-echo "---------- PUBLISH INITIATED ----------"
+header 'PUBLISH STARTED'
 
-dotnet publish --verbosity normal --configuration Release --no-build --no-restore --output Output
+dotnet publish --verbosity normal --configuration Debug --no-build --no-restore --output Published --nologo
 
-echo "---------- PUBLISH FINISHED ----------"
-printf "\n"
-echo "-------------------------------------------------------------------------------"
+header 'PUBLISH COMPLETED'

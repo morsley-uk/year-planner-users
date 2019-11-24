@@ -1,13 +1,11 @@
 #!/bin/bash
 
-#cd ../../..
+parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")";pwd -P)
+common="$parent_path"/../../Scripts
+source $common/header.sh
 
-echo "-------------------------------------------------------------------------------"
-printf "\n"
-echo "---------- RESTORE INITIATED ----------"
+header 'RESTORE STARTED'
 
 dotnet restore --verbosity normal
 
-echo "---------- RESTORE FINISHED ----------"
-printf "\n"
-echo "-------------------------------------------------------------------------------"
+header 'RESTORE COMPLETED'

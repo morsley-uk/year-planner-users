@@ -1,13 +1,16 @@
 #!/bin/bash
 
-#cd ../../..
+parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")";pwd -P)
+common="$parent_path"/../../Scripts
+source $common/header.sh
 
-echo "-------------------------------------------------------------------------------"
-printf "\n"
-echo "---------- CLEAN INITIATED ----------"
+header 'CLEAN STARTED'
 
-dotnet clean --verbosity normal
+dotnet clean --verbosity normal --nologo
 
-echo "---------- CLEAN FINISHED ----------"
-printf "\n"
-echo "-------------------------------------------------------------------------------"
+find . -iname "bin" | xargs rm -rf
+find . -iname "obj" | xargs rm -rf
+
+rm -r Published
+
+header 'CLEAN COMPLETED'

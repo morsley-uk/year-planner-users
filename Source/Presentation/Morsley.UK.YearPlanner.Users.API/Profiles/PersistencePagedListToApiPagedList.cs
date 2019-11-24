@@ -33,7 +33,7 @@ namespace Morsley.UK.YearPlanner.Users.API.Profiles
                 var response = context.Mapper.Map<API.Models.v1.Response.UserResponse>(user);
                 conversion.Add(response);
             }
-            
+
             conversion.CurrentPage = source.CurrentPage;
             conversion.TotalPages = source.TotalPages;
             conversion.PageSize = source.PageSize;

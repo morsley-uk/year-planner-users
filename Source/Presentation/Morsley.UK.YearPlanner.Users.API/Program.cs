@@ -21,6 +21,7 @@ namespace Morsley.UK.YearPlanner.Users.API
                 .ReadFrom.Configuration(configuration)
                 .Enrich.WithProperty("Application Name", "Morsley UK - Year Planner - Users API")
                 .Enrich.FromLogContext()
+                .WriteTo.Console()
                 .CreateLogger();
 
             try

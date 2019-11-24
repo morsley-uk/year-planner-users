@@ -1,13 +1,11 @@
 #!/bin/bash
 
-#cd ../../..
+parent_path=$(cd "$(dirname "${BASH_SOURCE[0]}")";pwd -P)
+common="$parent_path"/../../Scripts
+source $common/header.sh
 
-echo "-------------------------------------------------------------------------------"
-printf "\n"
-echo "---------- BUILD INITIATED ----------"
+header 'BUILD STARTED'
 
-dotnet build --verbosity normal --configuration Release --no-restore
+dotnet build --verbosity normal --configuration Debug --no-restore
 
-echo "---------- BUILD FINISHED ----------"
-printf "\n"
-echo "-------------------------------------------------------------------------------"
+header 'BUILD COMPLETED'
